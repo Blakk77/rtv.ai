@@ -2,13 +2,11 @@ import os
 import streamlit as st
 import google.generativeai as genai
 
-st.set_page_config(page_title="Rtv.ai", page_icon="🔧", layout="centered")
+st.set_page_config(page_title="Rtv.ai Pro", page_icon="🔧", layout="centered")
 
 st.markdown(
-    st.markdown(
     """
     <style>
-    /* Dégradé de fond sombre */
     .stApp {
         background: linear-gradient(135deg, #0e1117 0%, #1a1f2c 50%, #0e1117 100%);
     }
@@ -26,9 +24,8 @@ st.markdown(
 """,
     unsafe_allow_html=True,
 )
-""",
 
-st.markdown("# 🔧 Rtv.ai <span style='color:#ff4b4b;'>Expert méchanique</span>", unsafe_allow_html=True)
+st.markdown("# 🔧 Rtv.ai <span style='color:#ff4b4b;'>Pro</span>", unsafe_allow_html=True)
 
 api_key = None
 if "GEMINI_API_KEY" in st.secrets:
@@ -58,14 +55,13 @@ if st.button("Lancer le diagnostic rapide"):
       with st.spinner("Analyse..."):
         model = genai.GenerativeModel("gemini-3.6-flash")
 
-        # Prompt ultra-court et cash
         prompt = f"""
         Expert mécanicien. Véhicule: {marque_choisie} {modele}. Symptôme: "{probleme}".
         Donne une réponse ultra-courte, sans phrase de politesse, style mécano pressé.
 
-        1. 🎯 **Coupable numéro 1** (La pièce précise en 1 ligne).
-        2. 🧪 **Test rapide** (Comment vérifier en 1 minute).
-        3. 🔩 **Serrage / Référence** (Si applicable).
+        1. Coupable numéro 1 (La pièce précise en 1 ligne).
+        2. Test rapide (Comment vérifier en 1 minute).
+        3. Serrage / Référence (Si applicable).
         """
 
         response = model.generate_content(prompt)
@@ -80,3 +76,4 @@ if st.button("Lancer le diagnostic rapide"):
       st.error(f"Erreur : {e}")
   else:
     st.warning("⚠️ Remplis tous les champs.")
+    
