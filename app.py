@@ -5,12 +5,26 @@ import google.generativeai as genai
 import streamlit as st
 from google.api_core.exceptions import ResourceExhausted
 
-with st.sidebar:
-  pass_admin = st.text_input(
-      "Code Bypass", type="password", placeholder="Entre le pass..."
-  )
+# --- ADRESSE SECRÈTE POUR TOI ---
+# Si tu mets "?admin=Adminmkd" dans l'adresse, t'as zéro limite
+est_admin = st.query_params.get("admin") == "Adminmkd"
 
-est_admin = pass_admin == "Adminmkd"
+if est_admin:
+    st.session_state["dernier_clic"] = 0  # Remet le compteur à zéro direct pour toi
+
+temps_ecoule = time.time() - st.session_state["dernier_clic"]
+temps_restant = int(DUREE_ATTENTE - temps_ecoule)
+
+lancer_diag = False
+
+# Si c'est pas toi et qu'il reste du temps, ça bloque
+if not est_admin and temps_restant > 0:
+    st.warning(f"⏳ Serveur en pause. Patiente **{temps_restant} sec** avant le prochain diag.")
+    st.button(t["btn"], disabled=True)
+else:
+    if st.button(t["btn"]):
+        st.session_state["dernier_clic"] = time.time()
+        lancer_diag = True
 
 st.set_page_config(page_title="Rtv.ai Pro V1", page_icon="🔧", layout="centered")
 
