@@ -25,7 +25,8 @@ LANGS = {
         "pseudo_ph": "Ton pseudo (ex: Meca91)",
         "comment_ph": "Ton avis sur l'application...",
         "rate_btn": "Envoyer mon avis",
-        "rate_thanks": "🙏 Merci pour ton retour !",
+        "rate_thanks": "🙏 Merci pour ton retour, ton avis a bien été enregistré !",
+        "already_voted": "✅ Tu as déjà posté un avis avec ce pseudo !",
         "lang_label": "🌍 Choisir la langue",
     },
     "English": {
@@ -48,6 +49,7 @@ LANGS = {
         "comment_ph": "Your feedback about the app...",
         "rate_btn": "Submit Review",
         "rate_thanks": "🙏 Thanks for your feedback!",
+        "already_voted": "✅ You have already posted a review!",
         "lang_label": "🌍 Choose Language",
     },
     "Русский": {
@@ -70,6 +72,7 @@ LANGS = {
         "comment_ph": "Ваш отзыв...",
         "rate_btn": "Отправить отзыв",
         "rate_thanks": "🙏 Спасибо за отзыв!",
+        "already_voted": "✅ Вы уже оставили отзыв!",
         "lang_label": "🌍 Выбрать язык",
     },
     "Македонски": {
@@ -92,6 +95,7 @@ LANGS = {
         "comment_ph": "Твој коментар...",
         "rate_btn": "Испрати коментар",
         "rate_thanks": "🙏 Благодарам!",
+        "already_voted": "✅ Веќе имате оставено оценка!",
         "lang_label": "🌍 Избери јазик",
     },
     "Српски / Srpski": {
@@ -114,6 +118,7 @@ LANGS = {
         "comment_ph": "Tvoj komentar...",
         "rate_btn": "Pošalji ocenu",
         "rate_thanks": "🙏 Hvala na povratnoj informaciji!",
+        "already_voted": "✅ Već si poslao ocenu!",
         "lang_label": "🌍 Izaberi jezik",
     },
     "Hrvatski": {
@@ -136,6 +141,7 @@ LANGS = {
         "comment_ph": "Tvoj komentar...",
         "rate_btn": "Pošalji recenziju",
         "rate_thanks": "🙏 Hvala na recenziji!",
+        "already_voted": "✅ Već si ostavio recenziju!",
         "lang_label": "🌍 Odaberi jezik",
     },
     "Español": {
@@ -158,6 +164,7 @@ LANGS = {
         "comment_ph": "Tu comentario...",
         "rate_btn": "Enviar opinión",
         "rate_thanks": "🙏 ¡Gracias por tu comentario!",
+        "already_voted": "✅ ¡Ya has enviado tu opinión!",
         "lang_label": "🌍 Elegir idioma",
     },
     "Deutsch": {
@@ -180,11 +187,11 @@ LANGS = {
         "comment_ph": "Dein Feedback...",
         "rate_btn": "Bewertung absenden",
         "rate_thanks": "🙏 Danke für dein Feedback!",
+        "already_voted": "✅ Du hast bereits eine Bewertung abgegeben!",
         "lang_label": "🌍 Sprache wählen",
     },
 }
 
-# Fonctions pour charger et sauvegarder les avis dans un fichier JSON
 REVIEWS_FILE = "avis.json"
 
 
@@ -266,6 +273,9 @@ if "langue_choisie" not in st.session_state:
 if "historique" not in st.session_state:
   st.session_state["historique"] = []
 
+if "a_deja_vote" not in st.session_state:
+  st.session_state["a_deja_vote"] = False
+
 langue_cle = st.session_state["langue_choisie"]
 t = LANGS[langue_cle]
 
@@ -295,7 +305,7 @@ if st.button(t["btn"]):
 
         1. Coupable numéro 1 (La pièce précise en 1 ligne).
         2. Test rapide (Comment vérifier en 1 minute).
-        3. Serrage / Référence (If applicable).
+        3. Serrage / Référence (Si applicable).
         """
 
         response = model.generate_content(prompt)
@@ -345,41 +355,46 @@ if nouvelle_langue != langue_cle:
   st.session_state["langue_choisie"] = nouvelle_langue
   st.rerun()
 
-# --- BLOC AVIS & COMMENTAIRES TOUT EN BAS (GLOBAL VIA FICHIER JSON) ---
+# --- BLOC AVIS & COMMENTAIRES (1 SEUL AVIS PAR SESSION) ---
 st.markdown("---")
 st.markdown(f"### {t['rate_title']}")
-etoiles = ["⭐", "⭐⭐", "⭐⭐⭐", "⭐⭐⭐⭐", "⭐⭐⭐⭐⭐"]
 
-col_r1, col_r2 = st.columns([1, 2])
-with col_r1:
-  note_selectionnee = st.select_slider(
-      "Note", options=etoiles, value="⭐⭐⭐⭐⭐", label_visibility="collapsed"
+if st.session_state["a_deja_vote"]:
+  st.success(t["already_voted"])
+else:
+  etoiles = ["⭐", "⭐⭐", "⭐⭐⭐", "⭐⭐⭐⭐", "⭐⭐⭐⭐⭐"]
+
+  col_r1, col_r2 = st.columns([1, 2])
+  with col_r1:
+    note_selectionnee = st.select_slider(
+        "Note", options=etoiles, value="⭐⭐⭐⭐⭐", label_visibility="collapsed"
+    )
+  with col_r2:
+    pseudo_input = st.text_input(
+        "Pseudo", placeholder=t["pseudo_ph"], label_visibility="collapsed"
+    )
+
+  commentaire_input = st.text_area(
+      "Avis", placeholder=t["comment_ph"], label_visibility="collapsed"
   )
-with col_r2:
-  pseudo_input = st.text_input(
-      "Pseudo", placeholder=t["pseudo_ph"], label_visibility="collapsed"
-  )
 
-commentaire_input = st.text_area(
-    "Avis", placeholder=t["comment_ph"], label_visibility="collapsed"
-  )
+  if st.button(t["rate_btn"]):
+    if pseudo_input.strip() and commentaire_input.strip():
+      avis_actuels = charger_avis()
+      nouvel_avis = {
+          "pseudo": pseudo_input.strip(),
+          "note": note_selectionnee,
+          "commentaire": commentaire_input.strip(),
+      }
+      avis_actuels.insert(0, nouvel_avis)
+      sauvegarder_avis(avis_actuels)
+      st.session_state["a_deja_vote"] = True
+      st.success(t["rate_thanks"])
+      st.rerun()
+    else:
+      st.warning("⚠️ Remplis ton pseudo et ton commentaire.")
 
-if st.button(t["rate_btn"]):
-  if pseudo_input.strip() and commentaire_input.strip():
-    avis_actuels = charger_avis()
-    nouvel_avis = {
-        "pseudo": pseudo_input.strip(),
-        "note": note_selectionnee,
-        "commentaire": commentaire_input.strip(),
-    }
-    avis_actuels.insert(0, nouvel_avis)
-    sauvegarder_avis(avis_actuels)
-    st.success(t["rate_thanks"])
-    st.rerun()
-  else:
-    st.warning("⚠️ Remplis ton pseudo et ton commentaire.")
-
-# Chargement et affichage de tous les avis enregistrés globalement
+# Affichage de tous les avis enregistrés globalement + option de reset
 tous_les_avis = charger_avis()
 if tous_les_avis:
   st.markdown("<br>", unsafe_allow_html=True)
@@ -388,3 +403,9 @@ if tous_les_avis:
     st.caption(f'"{rev["commentaire"]}"')
     st.divider()
 
+  # Petit bouton pour réinitialiser les avis en cas de doublons (optionnel)
+  if st.button("🗑️ Vider tous les avis (Admin)"):
+    if os.path.exists(REVIEWS_FILE):
+      os.remove(REVIEWS_FILE)
+    st.session_state["a_deja_vote"] = False
+    st.rerun()
