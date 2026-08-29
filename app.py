@@ -18,6 +18,7 @@ LANGS = {
         "err_gen": "Erreur : ",
         "warn": "⚠️ Remplis tous les champs.",
         "res": "Résultat",
+        "lang_label": "🌍 Choisir la langue",
     },
     "English": {
         "brand_sub": "Pro",
@@ -32,6 +33,7 @@ LANGS = {
         "err_gen": "Error: ",
         "warn": "⚠️ Please fill in all fields.",
         "res": "Result",
+        "lang_label": "🌍 Choose Language",
     },
     "Русский": {
         "brand_sub": "Pro",
@@ -46,6 +48,7 @@ LANGS = {
         "err_gen": "Ошибка: ",
         "warn": "⚠️ Заполните все поля.",
         "res": "Результат",
+        "lang_label": "🌍 Выбрать язык",
     },
     "Македонски": {
         "brand_sub": "Pro",
@@ -60,6 +63,7 @@ LANGS = {
         "err_gen": "Грешка: ",
         "warn": "⚠️ Пополнете ги сите полиња.",
         "res": "Резултат",
+        "lang_label": "🌍 Избери јазик",
     },
     "Српски / Srpski": {
         "brand_sub": "Pro",
@@ -74,6 +78,7 @@ LANGS = {
         "err_gen": "Greška: ",
         "warn": "⚠️ Popunite sva polja.",
         "res": "Rezultat",
+        "lang_label": "🌍 Izaberi jezik",
     },
     "Hrvatski": {
         "brand_sub": "Pro",
@@ -88,6 +93,7 @@ LANGS = {
         "err_gen": "Greška: ",
         "warn": "⚠️ Ispunite sva polja.",
         "res": "Rezultat",
+        "lang_label": "🌍 Odaberi jezik",
     },
     "Español": {
         "brand_sub": "Pro",
@@ -102,6 +108,7 @@ LANGS = {
         "err_gen": "Error: ",
         "warn": "⚠️ Rellena todos los campos.",
         "res": "Resultado",
+        "lang_label": "🌍 Elegir idioma",
     },
     "Deutsch": {
         "brand_sub": "Pro",
@@ -116,28 +123,25 @@ LANGS = {
         "err_gen": "Fehler: ",
         "warn": "⚠️ Bitte alle Felder ausfüllen.",
         "res": "Ergebnis",
+        "lang_label": "🌍 Sprache wählen",
     },
 }
-
-with st.sidebar:
-  langue_cle = st.selectbox(
-      "🌍 Langue / Language", list(LANGS.keys()), label_visibility="visible"
-  )
-
-t = LANGS[langue_cle]
 
 st.markdown(
     """
     <style>
+    /* Fond global avec dégradé sombre et la Mercedes CLS en filigrane vectoriel simple */
     .stApp {
         background: linear-gradient(135deg, #070913 0%, #131829 50%, #070913 100%);
-    }
-    [data-testid="stSidebar"] {
-        background: linear-gradient(180deg, #090d19 0%, #0f1523 100%);
-        border-right: 1px solid rgba(255, 255, 255, 0.05);
+        background-image: 
+            linear-gradient(135deg, rgba(7, 9, 19, 0.93) 0%, rgba(19, 24, 41, 0.93) 50%, rgba(7, 9, 19, 0.93) 100%),
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 300' opacity='0.06'%3E%3Cpath fill='none' stroke='%23ffffff' stroke-width='1.5' d='M50,200 Q150,180 250,190 T450,185 Q550,170 650,195 L720,220 L750,200 L730,175 Q680,140 580,135 Q450,130 350,145 Q200,150 100,185 Z'/%3E%3Cpath fill='none' stroke='%23ffffff' stroke-width='1' d='M180,185 Q250,155 380,155 Q500,155 580,175 M220,190 L240,220 M580,190 L560,220'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: center 70%;
+        background-size: 80% auto;
     }
     
-    /* Bouton avec des bords bien arrondis et un style propre */
+    /* Bouton avec bords bien arrondis */
     .stButton>button {
         width: 100%;
         background: linear-gradient(135deg, #ff4b4b 0%, #e03131 100%);
@@ -155,7 +159,7 @@ st.markdown(
         transform: translateY(-1px);
     }
 
-    /* Champs de saisie ultra arrondis pour dire adieu au look carré */
+    /* Champs de saisie ultra arrondis */
     .stTextInput>div>div>input, .stSelectbox>div>div>div {
         background-color: rgba(255, 255, 255, 0.04);
         border-radius: 14px;
@@ -167,8 +171,7 @@ st.markdown(
 )
 
 st.markdown(
-    f"# 🔧 Rtv.ai <span style='color:#ff4b4b;'>{t['brand_sub']}</span>",
-    unsafe_allow_html=True,
+    "# 🔧 Rtv.ai <span style='color:#ff4b4b;'>Pro</span>", unsafe_allow_html=True
 )
 
 api_key = None
@@ -181,6 +184,19 @@ if api_key:
   genai.configure(api_key=api_key)
 
 col1, col2 = st.columns(2)
+with col1:
+  # Langue par défaut en haut pour que les variables existent direct
+  # On va utiliser le sélecteur du bas pour changer la langue active
+  pass
+
+# On récupère d'abord la langue via un état de session pour que le selectbox du bas pilote tout
+if "langue_choisie" not in st.session_state:
+  st.session_state["langue_choisie"] = "Français"
+
+langue_cle = st.session_state["langue_choisie"]
+t = LANGS[langue_cle]
+
+# Inputs principaux
 with col1:
   marque_choisie = st.selectbox(
       t["marque"],
@@ -221,3 +237,15 @@ if st.button(t["btn"]):
       st.error(f"{t['err_gen']}{e}")
   else:
     st.warning(t["warn"])
+
+# --- SÉLECTEUR DE LANGUE EN BAS DE PAGE (Parfait pour mobile) ---
+st.markdown("<br><br>", unsafe_allow_html=True)
+st.markdown("---")
+nouvelle_langue = st.selectbox(
+    LANGS[langue_cle]["lang_label"],
+    list(LANGS.keys()),
+    index=list(LANGS.keys()).index(langue_cle),
+)
+if nouvelle_langue != langue_cle:
+  st.session_state["langue_choisie"] = nouvelle_langue
+  st.rerun()
