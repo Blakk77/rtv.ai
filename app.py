@@ -7,11 +7,11 @@ from google.api_core.exceptions import ResourceExhausted
 
 st.set_page_config(page_title="Rtv.ai Pro", page_icon="🔧", layout="centered")
 
-# 1. ON DÉFINIT LES CONSTANTES EN PREMIER
-DUREE_ATTENTE = 60  # 60 secondes de cooldown
+# --- 1. CONSTANTES & CONFIG ---
+DUREE_ATTENTE = 60  # 60 sec de cooldown
 REVIEWS_FILE = "avis.json"
 
-# 2. SESSION STATE
+# --- 2. SESSION STATES ---
 if "historique" not in st.session_state:
   st.session_state["historique"] = []
 if "dernier_clic" not in st.session_state:
@@ -19,11 +19,22 @@ if "dernier_clic" not in st.session_state:
 if "a_deja_vote" not in st.session_state:
   st.session_state["a_deja_vote"] = False
 
-# 3. VERIF ADMIN VIA URL (?admin=Adminmkd)
-est_admin = st.query_params.get("admin") == "Adminmkd"
+# --- 3. VERIF ADMIN (SIDEBAR + URL) ---
+with st.sidebar:
+  pass_input = st.text_input(
+      "Accès Admin", type="password", placeholder="Mot de passe..."
+  )
+
+est_admin = (
+    pass_input == "Adminmkd" or st.query_params.get("admin") == "Adminmkd"
+)
+
 if est_admin:
   st.session_state["dernier_clic"] = 0
 
+# --- 4. CALCUL DU TEMPS ---
+temps_ecoule = time.time() - st.session_state["dernier_clic"]
+temps_restant = int(DUREE_ATTENTE - temps_ecoule)
 # 4. CALCUL DU TEMPS (Après avoir tout défini)
 temps_ecoule = time.time() - st.session_state["dernier_clic"]
 temps_restant = int(DUREE_ATTENTE - temps_ecoule)
