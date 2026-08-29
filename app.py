@@ -5,6 +5,8 @@ import google.generativeai as genai
 import streamlit as st
 from google.api_core.exceptions import ResourceExhausted
 
+utilisateur_actuel = st.text_input("Pseudo / Admin", value="Adminmkd")
+
 st.set_page_config(page_title="Rtv.ai Pro V1", page_icon="🔧", layout="centered")
 
 # --- PARAMÈTRES ET SÉCURITÉ ---
