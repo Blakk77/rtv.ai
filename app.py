@@ -138,7 +138,7 @@ if lancer_diag:
     try:
       with st.spinner(t["spinner"]):
         # CORRECTION DU NOM DU MODÈLE (gemini-1.5-flash)
-        model = genai.GenerativeModel("gemini-1.5-flash")
+        model = genai.GenerativeModel("gemini-3.6-flash")
         prompt = f"""
         Expert mécanicien. Véhicule: {marque_choisie} {modele}. Symptôme: "{probleme}".
         Réponds court en Français style mécano:
