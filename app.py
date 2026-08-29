@@ -5,9 +5,13 @@ import google.generativeai as genai
 st.set_page_config(page_title="Rtv.ai", page_icon="🔧", layout="centered")
 
 st.markdown(
+    st.markdown(
     """
     <style>
-    .main { background-color: #0e1117; }
+    /* Dégradé de fond sombre */
+    .stApp {
+        background: linear-gradient(135deg, #0e1117 0%, #1a1f2c 50%, #0e1117 100%);
+    }
     .stButton>button {
         width: 100%;
         background-color: #ff4b4b;
@@ -22,6 +26,7 @@ st.markdown(
 """,
     unsafe_allow_html=True,
 )
+""",
 
 st.markdown("# 🔧 Rtv.ai <span style='color:#ff4b4b;'>Expert méchanique</span>", unsafe_allow_html=True)
 
