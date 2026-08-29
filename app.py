@@ -129,25 +129,22 @@ t = LANGS[langue_cle]
 st.markdown(
     """
     <style>
-    /* Fond global de l'appli avec un beau dégradé sombre et profond */
     .stApp {
         background: linear-gradient(135deg, #070913 0%, #131829 50%, #070913 100%);
     }
-    
-    /* Harmonisation totale de la sidebar pour dégager ce vieux gris moche */
     [data-testid="stSidebar"] {
         background: linear-gradient(180deg, #090d19 0%, #0f1523 100%);
         border-right: 1px solid rgba(255, 255, 255, 0.05);
     }
-
-    /* Style futuriste pour les boutons */
+    
+    /* Bouton avec des bords bien arrondis et un style propre */
     .stButton>button {
         width: 100%;
         background: linear-gradient(135deg, #ff4b4b 0%, #e03131 100%);
         color: white;
         font-weight: bold;
-        border-radius: 10px;
-        padding: 0.65rem;
+        border-radius: 16px;
+        padding: 0.7rem;
         border: none;
         box-shadow: 0 4px 15px rgba(255, 75, 75, 0.4);
         transition: all 0.3s ease;
@@ -158,10 +155,11 @@ st.markdown(
         transform: translateY(-1px);
     }
 
-    /* Amélioration des inputs pour qu'ils soient raccord */
+    /* Champs de saisie ultra arrondis pour dire adieu au look carré */
     .stTextInput>div>div>input, .stSelectbox>div>div>div {
-        background-color: rgba(255, 255, 255, 0.03);
-        border-radius: 8px;
+        background-color: rgba(255, 255, 255, 0.04);
+        border-radius: 14px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
     }
     </style>
 """,
