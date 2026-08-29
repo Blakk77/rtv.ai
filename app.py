@@ -7,8 +7,9 @@ st.set_page_config(page_title="Rtv.ai Pro", page_icon="🔧", layout="centered")
 st.markdown(
     """
     <style>
+    /* Dégradé bien visible et stylé */
     .stApp {
-        background: linear-gradient(135deg, #0e1117 0%, #1a1f2c 50%, #0e1117 100%);
+        background: linear-gradient(145deg, #0b0f19 0%, #1e2538 40%, #0d121c 100%);
     }
     .stButton>button {
         width: 100%;
@@ -18,8 +19,13 @@ st.markdown(
         border-radius: 8px;
         padding: 0.6rem;
         border: none;
+        box-shadow: 0 4px 12px rgba(255, 75, 75, 0.3);
     }
-    .stButton>button:hover { background-color: #ff2b2b; color: white; }
+    .stButton>button:hover { 
+        background-color: #ff2b2b; 
+        color: white; 
+        box-shadow: 0 6px 16px rgba(255, 43, 43, 0.5);
+    }
     </style>
 """,
     unsafe_allow_html=True,
@@ -76,4 +82,3 @@ if st.button("Lancer le diagnostic rapide"):
       st.error(f"Erreur : {e}")
   else:
     st.warning("⚠️ Remplis tous les champs.")
-    
