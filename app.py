@@ -1,9 +1,12 @@
+import os
 import streamlit as st
+import google.generativeai as genai
 
 st.set_page_config(
-    page_title="Rtv.ai - Atelier Pro", page_icon="🔧", layout="centered"
+    page_title="Rtv.ai - Expert Atelier Pro", page_icon="🔧", layout="centered"
 )
 
+# Design CSS pro type dark-mode atelier
 st.markdown(
     """
     <style>
@@ -24,16 +27,27 @@ st.markdown(
 )
 
 st.markdown(
-    "# 🔧 Rtv.ai <span style='color:#ff4b4b;'>Pro Diagnostic</span>",
+    "# 🔧 Rtv.ai <span style='color:#ff4b4b;'>Expert Atelier</span>",
     unsafe_allow_html=True,
 )
 st.markdown(
-    "<p style='color: #8b949e;'>Base de données technique constructeur"
-    " ciblée.</p>",
+    "<p style='color: #8b949e;'>Module de diagnostic technique intelligent"
+    " interconnecté.</p>",
     unsafe_allow_html=True,
 )
 st.markdown("---")
 
+# Configuration de la clé API Gemini (via Streamlit Secrets ou variable d'env)
+api_key = None
+if "GEMINI_API_KEY" in st.secrets:
+  api_key = st.secrets["GEMINI_API_KEY"]
+elif "GEMINI_API_KEY" in os.environ:
+  api_key = os.environ["GEMINI_API_KEY"]
+
+if api_key:
+  genai.configure(api_key=api_key)
+
+# Formulaire d'entrée
 st.markdown("### 📋 1. Identification du Véhicule")
 marques = [
     "Mercedes-Benz",
@@ -49,81 +63,59 @@ with col1:
   marque_choisie = st.selectbox("Marque constructeur", marques)
 with col2:
   modele_motorisation = st.text_input(
-      "Modèle & Motorisation", placeholder="ex: W212 E350 V6"
+      "Modèle & Motorisation",
+      placeholder="ex: W212 E350 V6 CDI 265ch",
   )
 
 st.markdown("### 🔍 2. Symptôme / Panne constatée")
 probleme = st.text_area(
     "Description précise du problème",
-    placeholder=(
-        "ex: perte de puissance à l'accélération, fumée noire, bruit de"
-        " sifflement..."
-    ),
+    placeholder="ex: bruit de fuite aux injecteurs, claquement à froid, perte de puissance...",
     height=100,
 )
 
 st.markdown("<br>", unsafe_allow_html=True)
 
-if st.button("Lancer l'analyse ciblée"):
-  if modele_motorisation and probleme:
-    st.markdown("---")
-    st.markdown(
-        f"## 📊 Rapport d'Analyse : {marque_choisie} ({modele_motorisation})"
+if st.button("Lancer l'analyse technique approfondie"):
+  if not api_key:
+    st.error(
+        "❌ Clé API manquante ! Ajoute ta `GEMINI_API_KEY` dans les Secrets de"
+        " ton application Streamlit Cloud."
     )
-    st.write(f"🔎 **Symptôme analysé :** *{probleme}*")
+  elif modele_motorisation and probleme:
+    try:
+      with st.spinner(
+          "Interrogation des bases de données techniques et analyse en"
+          " cours..."
+      ):
+        # Utilisation du modèle rapide et ultra performant
+        model = genai.GenerativeModel("gemini-2.5-flash")
 
-    # Analyse intelligente basée sur les mots-clés saisis par l'utilisateur
-    pb_lower = probleme.lower()
+        # Prompt ultra-cadré pour forcer l'IA à répondre précisément au cas exact
+        prompt = f"""
+        Agis en tant qu'expert technique automobile de premier plan (type ingénieur diagnostic / Autodata / ElsaWin).
+        Véhicule concerné : {marque_choisie} - {modele_motorisation}.
+        Symptôme exact décrit par le mécanicien : "{probleme}".
 
-    if "puissance" in pb_lower or "pêche" in pb_lower or "accélération" in pb_lower:
-      diagnostic_titre = "Problème de Puissance / Suralimentation"
-      causes = [
-          "Durite de suralimentation (intercooler) percée ou fendue (génère un sifflement et une mise en sécurité du turbo).",
-          "Vanne EGR encrassée ou bloquée en position ouverte.",
-          "Capteur de pression de suralimentation (MAP) encrassé par la suie.",
-          "Filtre à carburant colmaté (débit insuffisant en charge).",
-      ]
-      actions = (
-          "1. Inspecter minutieusement toutes les durites d'échangeur air/air"
-          " (traces d'huile visibles).\n2. Contrôler les codes défauts à la"
-          " valise (ex: pression de turbo trop basse).\n3. Nettoyer ou tester"
-          " le capteur de pression MAP sur le collecteur."
-      )
+        Analyse ce problème spécifique en te basant sur les pannes connues réelles de cette motorisation. Ne réponds pas de manière générique, cible précisément le symptôme indiqué (injecteurs, turbo, bruits, etc.).
 
-    elif "bruit" in pb_lower or "claque" in pb_lower or "couine" in pb_lower:
-      diagnostic_titre = "Bruit / Anomalie Mécanique Périphérique"
-      causes = [
-          "Usure du galet tendeur ou de la poulie de renvoi de la courroie d'accessoires.",
-          "Jeu au niveau de la poulie debrayable d'alternateur.",
-          "Jeu ou usure des poussoirs hydrauliques / chaîne de distribution.",
-      ]
-      actions = (
-          "1. Déposer la courroie d'accessoires et vérifier l'état de chaque"
-          " galet à la main.\n2. Écouter le bloc moteur avec un stéthoscope"
-          " d'atelier.\n3. Vérifier la tension de la chaîne."
-      )
+        Structure ta réponse en clair avec ces sections exactes en Markdown :
+        1. ⚙️ **Analyse ciblée du symptôme** (pourquoi ce problème survient précisément sur ce modèle).
+        2. ⚠️ **Causes principales & Pièces en cause** (liste claire des causes probables par ordre de probabilité).
+        3. 🛠️ **Procédure de diagnostic et de résolution pas à pas** (méthode d'atelier détaillée pour réparer).
+        4. 🔩 **Données techniques utiles** (couples de serrage, normes ou références constructeur si applicables).
+        """
 
-    else:
-      diagnostic_titre = "Diagnostic Général / Panne Spécifique"
-      causes = [
-          "Anomalie de gestion électronique ou capteur défectueux.",
-          "Faux contact sur les faisceaux moteurs ou problème d'alimentation.",
-      ]
-      actions = (
-          "1. Brancher un outil de diagnostic OBD2 pour relever les codes"
-          " défauts précis.\n2. Contrôler l'état des fusibles et des masses"
-          " principales."
-      )
+        response = model.generate_content(prompt)
 
-    # Affichage dynamique orienté vers le vrai problème
-    st.markdown(f"#### ⚙️ Cause Principale Identifiée : {diagnostic_titre}")
-    st.markdown("#### ⚠️ Pannes Probables à Vérifier :")
-    for c in causes:
-      st.markdown(f"- {c}")
+        st.success("✅ Rapport d'analyse technique généré avec succès !")
+        st.markdown("---")
+        st.markdown(
+            f"## 📊 Rapport d'Atelier : {marque_choisie} ({modele_motorisation})"
+        )
+        st.markdown(response.text)
 
-    st.markdown("#### 🛠️ Procédure de Résolution Recommandée :")
-    st.code(actions, language="markdown")
-
-    st.success("✅ Analyse effectuée en fonction de votre description.")
+    except Exception as e:
+      st.error(f"Une erreur est survenue lors de l'appel à l'IA : {e}")
   else:
-    st.warning("⚠️ Merci de remplir le modèle et de décrire le problème.")
+    st.warning("⚠️ Merci de remplir le modèle/motorisation et la description.")
