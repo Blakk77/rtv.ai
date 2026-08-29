@@ -31,9 +31,9 @@ est_admin = (
 )
 
 if est_admin:
-       st.session_state["dernier_clic"] = 0
-  st.toast("🔑 Mode Admin activé !", icon="🔓")
-
+    st.session_state["dernier_clic"] = 0
+    st.toast("🔑 Mode Admin activé !", icon="🔓")
+  
 # --- 4. CALCUL DU TEMPS ---
 temps_ecoule = time.time() - st.session_state["dernier_clic"]
 temps_restant = int(DUREE_ATTENTE - temps_ecoule)
