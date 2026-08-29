@@ -7,160 +7,32 @@ from google.api_core.exceptions import ResourceExhausted
 
 st.set_page_config(page_title="Rtv.ai Pro", page_icon="🔧", layout="centered")
 
-# --- 1. CONSTANTES & CONFIG ---
+# --- CONFIG & SESSION ---
 DUREE_ATTENTE = 60
-REVIEWS_FILE = "avis.json"
+PSEUDO_ADMIN = "adminmkd"
 
-# --- 2. SESSION STATES ---
 if "historique" not in st.session_state:
-  st.session_state["historique"] = []
+    st.session_state["historique"] = []
 if "dernier_clic" not in st.session_state:
-  st.session_state["dernier_clic"] = 0
-if "a_deja_vote" not in st.session_state:
-  st.session_state["a_deja_vote"] = False
+    st.session_state["dernier_clic"] = 0
 
-# --- 3. VERIF ADMIN (SIDEBAR + URL) ---
+# --- VERIF ADMIN SIDEBAR ---
 with st.sidebar:
-  pass_input = st.text_input(
-      "Accès Admin", type="password", placeholder="Mot de passe..."
-  )
+    pass_input = st.text_input("Accès Admin", type="password", placeholder="Mot de passe...")
 
-est_admin = (
-    pass_input.strip().lower() == "adminmkd"
-    or st.query_params.get("admin", "").lower() == "adminmkd"
-)
+# On définit est_admin UNE SEULE FOIS ici tout en haut
+est_admin = pass_input.strip().lower() == PSEUDO_ADMIN or st.query_params.get("admin", "").lower() == PSEUDO_ADMIN
 
 if est_admin:
-  st.session_state["dernier_clic"] = 0
-  st.toast("🔑 Mode Admin activé !", icon="🔓")
+    st.session_state["dernier_clic"] = 0
 
-# --- 4. CALCUL DU TEMPS ---
-temps_ecoule = time.time() - st.session_state["dernier_clic"]
-temps_restant = int(DUREE_ATTENTE - temps_ecoule)
-
-# --- 5. BANDEAU ADMIN TOUT EN HAUT ---
+# --- BANDEAU ADMIN (EN HAUT DE PAGE) ---
 if est_admin:
-  st.markdown(
-      """
+    st.markdown("""
         <div style="background-color: rgba(255, 42, 42, 0.15); border: 1px solid #ff2a2a; color: #ff4d4d; padding: 8px 15px; border-radius: 8px; text-align: center; font-weight: bold; margin-bottom: 20px;">
             ⚡ Compte Admin connecté — Cooldown désactivé
         </div>
-    """,
-      unsafe_allow_html=True,
-  )
-  st.markdown(
-    "# 🔧 Rtv.ai <span class='titre-pro'>Pro</span>", unsafe_allow_html=True
-)
-
-# --- 7. FORMULAIRE VEHICULE ---
-col1, col2 = st.columns(2)
-with col1:
-  marque_choisie = st.selectbox(
-      "Marque",
-      ["Mercedes-Benz", "BMW", "Audi", "Volkswagen", "Renault", "Peugeot"],
-  )
-with col2:
-  modele = st.text_input("Modèle & Motorisation", placeholder="ex: W212 E350")
-
-probleme = st.text_input(
-    "Symptôme ou code erreur", placeholder="ex: bruit injecteur ou P0299"
-)
-
-# --- 4. CALCUL DU TEMPS ---
-temps_ecoule = time.time() - st.session_state["dernier_clic"]
-temps_restant = int(DUREE_ATTENTE - temps_ecoule)
-# 4. CALCUL DU TEMPS (Après avoir tout défini)
-temps_ecoule = time.time() - st.session_state["dernier_clic"]
-temps_restant = int(DUREE_ATTENTE - temps_ecoule)
-# --- PARAMÈTRES ET SÉCURITÉ ---
-DUREE_ATTENTE = 30  # 60 secondes de cooldown
-PSEUDO_ADMIN = "Adminmkd"  # Ton pseudo pour ne JAMAIS attendre
-REVIEWS_FILE = "avis.json"
-
-LANGS = {
-    "Français": {
-        "marque": "Marque",
-        "modele": "Modèle & Motorisation",
-        "modele_ph": "ex: W212 E350",
-        "probleme": "Symptôme ou code erreur",
-        "probleme_ph": "ex: bruit injecteur ou P0299",
-        "btn": "LANCER LE DIAGNOSTIC RAPIDE",
-        "spinner": "Analyse en cours...",
-        "err_key": "❌ Clé API manquante dans les secrets.",
-        "err_gen": "Erreur : ",
-        "warn": "⚠️ Remplis tous les champs.",
-        "res": "Résultat",
-        "history": "📜 Historique des diagnostics",
-        "copy_label": "📋 Texte brut pour copie rapide :",
-        "rate_title": "⭐ NOTER L'APPLICATION ET LAISSER UN AVIS",
-        "pseudo_ph": "Ton pseudo (ex: Meca91)",
-        "comment_ph": "Ton avis sur l'application...",
-        "rate_btn": "Envoyer mon avis",
-        "rate_thanks": "🙏 Merci pour ton retour !",
-        "already_voted": "✅ Tu as déjà posté un avis !",
-    }
-}
-
-# --- FONCTIONS AVIS ---
-def charger_avis():
-  if os.path.exists(REVIEWS_FILE):
-    try:
-      with open(REVIEWS_FILE, "r", encoding="utf-8") as f:
-        return json.load(f)
-    except:
-      return []
-  return []
-
-
-def sauvegarder_avis(liste_avis):
-  with open(REVIEWS_FILE, "w", encoding="utf-8") as f:
-    json.dump(liste_avis, f, ensure_ascii=False, indent=4)
-
-
-# --- CSS FORCE BRUTE ---
-st.markdown(
-    """
-    <style>
-    .stApp {
-        background: linear-gradient(rgba(7, 9, 19, 0.88), rgba(19, 24, 41, 0.92)),
-                    url("https://images.unsplash.com/photo-1617814076367-b759c7d7e738?auto=format&fit=crop&w=1200&q=80");
-        background-size: cover; background-attachment: fixed;
-    }
-    h1, h2, h3, p, label, div { color: #ffffff !important; }
-    .titre-pro { color: #ff2a2a !important; text-shadow: 0 0 10px rgba(255, 42, 42, 0.5); }
-    
-    div.stButton > button {
-        background: linear-gradient(90deg, #ff0000 0%, #990000 100%) !important;
-        color: white !important; border: 2px solid #ff4d4d !important;
-        border-radius: 12px !important; font-weight: 800 !important;
-        padding: 0.8rem !important; width: 100% !important;
-    }
-    [data-baseweb="input"], [data-baseweb="select"], [data-baseweb="textarea"] {
-        background-color: rgba(0, 0, 0, 0.75) !important;
-        border: 1px solid rgba(255, 255, 255, 0.2) !important;
-        border-radius: 10px !important;
-    }
-    </style>
-""",
-    unsafe_allow_html=True,
-)
-
-st.markdown(
-    "# 🔧 Rtv.ai <span class='titre-pro'>Pro</span>", unsafe_allow_html=True
-)
-
-# API Key
-api_key = st.secrets.get("GEMINI_API_KEY") or os.environ.get("GEMINI_API_KEY")
-if api_key:
-  genai.configure(api_key=api_key)
-
-# Session States
-if "historique" not in st.session_state:
-  st.session_state["historique"] = []
-if "dernier_clic" not in st.session_state:
-  st.session_state["dernier_clic"] = 0
-if "a_deja_vote" not in st.session_state:
-  st.session_state["a_deja_vote"] = False
+    """, unsafe_allow_html=True)
 
 t = LANGS["Français"]
 
