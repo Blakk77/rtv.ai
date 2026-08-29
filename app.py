@@ -6,7 +6,7 @@ import streamlit as st
 from google.api_core.exceptions import ResourceExhausted
 
 st.set_page_config(page_title="Rtv.ai Pro", page_icon="🔧", layout="centered")
-)
+
 
 # --- PARAMÈTRES ET SÉCURITÉ ---
 DUREE_ATTENTE = 60  # 60 secondes de cooldown
