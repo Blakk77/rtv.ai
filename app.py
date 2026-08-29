@@ -168,13 +168,15 @@ st.markdown(
     "# 🔧 Rtv.ai <span style='color:#ff4b4b;'>Pro</span>", unsafe_allow_html=True
 )
 
-# La Mercedes CLS en SVG direct
+# Croquis simple et clean d'une berline générique
 st.markdown(
     """
     <div style="text-align: center; margin-bottom: 20px;">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 160" width="100%" style="opacity: 0.18; max-width: 400px;">
-            <path fill="none" stroke="#ffffff" stroke-width="2" d="M40,120 Q100,105 180,110 T350,105 Q450,95 530,115 L560,130 L575,115 L560,95 Q520,70 450,65 Q350,60 270,75 Q150,80 70,110 Z"/>
-            <path fill="none" stroke="#ffffff" stroke-width="1.2" d="M140,112 Q200,85 300,85 Q400,85 450,98 M170,115 L190,135 M450,115 L435,135"/>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 150" width="100%" style="opacity: 0.2; max-width: 350px;">
+            <path fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M40,110 Q80,110 130,95 Q200,75 280,75 Q360,75 410,95 Q450,110 470,110 L40,110 Z"/>
+            <path fill="none" stroke="#ffffff" stroke-width="1.5" d="M150,93 Q210,65 270,65 Q330,65 370,93"/>
+            <circle cx="140" cy="110" r="22" fill="none" stroke="#ffffff" stroke-width="1.5"/>
+            <circle cx="370" cy="110" r="22" fill="none" stroke="#ffffff" stroke-width="1.5"/>
         </svg>
     </div>
     """,
