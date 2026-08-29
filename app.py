@@ -1,6 +1,7 @@
+import json
 import os
-import streamlit as st
 import google.generativeai as genai
+import streamlit as st
 
 st.set_page_config(page_title="Rtv.ai Pro", page_icon="🔧", layout="centered")
 
@@ -183,6 +184,25 @@ LANGS = {
     },
 }
 
+# Fonctions pour charger et sauvegarder les avis dans un fichier JSON
+REVIEWS_FILE = "avis.json"
+
+
+def charger_avis():
+  if os.path.exists(REVIEWS_FILE):
+    try:
+      with open(REVIEWS_FILE, "r", encoding="utf-8") as f:
+        return json.load(f)
+    except:
+      return []
+  return []
+
+
+def sauvegarder_avis(liste_avis):
+  with open(REVIEWS_FILE, "w", encoding="utf-8") as f:
+    json.dump(liste_avis, f, ensure_ascii=False, indent=4)
+
+
 st.markdown(
     """
     <style>
@@ -246,9 +266,6 @@ if "langue_choisie" not in st.session_state:
 if "historique" not in st.session_state:
   st.session_state["historique"] = []
 
-if "all_reviews" not in st.session_state:
-  st.session_state["all_reviews"] = []
-
 langue_cle = st.session_state["langue_choisie"]
 t = LANGS[langue_cle]
 
@@ -278,7 +295,7 @@ if st.button(t["btn"]):
 
         1. Coupable numéro 1 (La pièce précise en 1 ligne).
         2. Test rapide (Comment vérifier en 1 minute).
-        3. Serrage / Référence (Si applicable).
+        3. Serrage / Référence (If applicable).
         """
 
         response = model.generate_content(prompt)
@@ -328,7 +345,7 @@ if nouvelle_langue != langue_cle:
   st.session_state["langue_choisie"] = nouvelle_langue
   st.rerun()
 
-# --- BLOC AVIS & COMMENTAIRES TOUT EN BAS ---
+# --- BLOC AVIS & COMMENTAIRES TOUT EN BAS (GLOBAL VIA FICHIER JSON) ---
 st.markdown("---")
 st.markdown(f"### {t['rate_title']}")
 etoiles = ["⭐", "⭐⭐", "⭐⭐⭐", "⭐⭐⭐⭐", "⭐⭐⭐⭐⭐"]
@@ -339,28 +356,34 @@ with col_r1:
       "Note", options=etoiles, value="⭐⭐⭐⭐⭐", label_visibility="collapsed"
   )
 with col_r2:
-  pseudo_input = st.text_input("Pseudo", placeholder=t["pseudo_ph"], label_visibility="collapsed")
+  pseudo_input = st.text_input(
+      "Pseudo", placeholder=t["pseudo_ph"], label_visibility="collapsed"
+  )
 
-commentaire_input = st.text_area("Avis", placeholder=t["comment_ph"], label_visibility="collapsed")
+commentaire_input = st.text_area(
+    "Avis", placeholder=t["comment_ph"], label_visibility="collapsed"
+  )
 
 if st.button(t["rate_btn"]):
   if pseudo_input.strip() and commentaire_input.strip():
-    st.session_state["all_reviews"].insert(
-        0,
-        {
-            "pseudo": pseudo_input.strip(),
-            "note": note_selectionnee,
-            "commentaire": commentaire_input.strip(),
-        },
-    )
+    avis_actuels = charger_avis()
+    nouvel_avis = {
+        "pseudo": pseudo_input.strip(),
+        "note": note_selectionnee,
+        "commentaire": commentaire_input.strip(),
+    }
+    avis_actuels.insert(0, nouvel_avis)
+    sauvegarder_avis(avis_actuels)
     st.success(t["rate_thanks"])
+    st.rerun()
   else:
     st.warning("⚠️ Remplis ton pseudo et ton commentaire.")
 
-# Affichage des avis reçus tout à la fin de la page
-if st.session_state["all_reviews"]:
+# Chargement et affichage de tous les avis enregistrés globalement
+tous_les_avis = charger_avis()
+if tous_les_avis:
   st.markdown("<br>", unsafe_allow_html=True)
-  for rev in st.session_state["all_reviews"]:
+  for rev in tous_les_avis:
     st.markdown(f"**{rev['pseudo']}** {rev['note']}")
     st.caption(f'"{rev["commentaire"]}"')
     st.divider()
