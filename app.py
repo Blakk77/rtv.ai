@@ -20,8 +20,11 @@ LANGS = {
         "res": "Résultat",
         "history": "📜 Historique des diagnostics",
         "copy_label": "📋 Texte brut pour copie rapide :",
-        "rate_title": "⭐ Noter l'application",
-        "rate_thanks": "🙏 Merci pour ton évaluation !",
+        "rate_title": "⭐ Noter l'application et laisser un avis",
+        "pseudo_ph": "Ton pseudo (ex: Meca91)",
+        "comment_ph": "Ton avis sur l'application...",
+        "rate_btn": "Envoyer mon avis",
+        "rate_thanks": "🙏 Merci pour ton retour !",
         "lang_label": "🌍 Choisir la langue",
     },
     "English": {
@@ -39,7 +42,10 @@ LANGS = {
         "res": "Result",
         "history": "📜 Diagnosis History",
         "copy_label": "📋 Raw text for easy copying:",
-        "rate_title": "⭐ Rate this app",
+        "rate_title": "⭐ Rate the app & leave a comment",
+        "pseudo_ph": "Your pseudo (e.g., JohnDoe)",
+        "comment_ph": "Your feedback about the app...",
+        "rate_btn": "Submit Review",
         "rate_thanks": "🙏 Thanks for your feedback!",
         "lang_label": "🌍 Choose Language",
     },
@@ -58,8 +64,11 @@ LANGS = {
         "res": "Результат",
         "history": "📜 История диагностик",
         "copy_label": "📋 Текст для быстрого копирования:",
-        "rate_title": "⭐ Оценить приложение",
-        "rate_thanks": "🙏 Спасибо за оценку!",
+        "rate_title": "⭐ Оценить приложение и оставить отзыв",
+        "pseudo_ph": "Ваш псевдоним",
+        "comment_ph": "Ваш отзыв...",
+        "rate_btn": "Отправить отзыв",
+        "rate_thanks": "🙏 Спасибо за отзыв!",
         "lang_label": "🌍 Выбрать язык",
     },
     "Македонски": {
@@ -77,7 +86,10 @@ LANGS = {
         "res": "Резултат",
         "history": "📜 Историја на дијагностика",
         "copy_label": "📋 Текст за брзо копирање:",
-        "rate_title": "⭐ Оцени ја апликацијата",
+        "rate_title": "⭐ Оцени ја апликацијата и остави коментар",
+        "pseudo_ph": "Твој псевдоним",
+        "comment_ph": "Твој коментар...",
+        "rate_btn": "Испрати коментар",
         "rate_thanks": "🙏 Благодарам!",
         "lang_label": "🌍 Избери јазик",
     },
@@ -96,8 +108,11 @@ LANGS = {
         "res": "Rezultat",
         "history": "📜 Istorija dijagnostike",
         "copy_label": "📋 Tekst za lako kopiranje:",
-        "rate_title": "⭐ Oceni aplikaciju",
-        "rate_thanks": "🙏 Hvala na oceni!",
+        "rate_title": "⭐ Oceni aplikaciju i ostavi komentar",
+        "pseudo_ph": "Tvoj nadimak",
+        "comment_ph": "Tvoj komentar...",
+        "rate_btn": "Pošalji ocenu",
+        "rate_thanks": "🙏 Hvala na povratnoj informaciji!",
         "lang_label": "🌍 Izaberi jezik",
     },
     "Hrvatski": {
@@ -115,8 +130,11 @@ LANGS = {
         "res": "Rezultat",
         "history": "📜 Povijest dijagnostike",
         "copy_label": "📋 Tekst za jednostavno kopiranje:",
-        "rate_title": "⭐ Ocijeni aplikaciju",
-        "rate_thanks": "🙏 Hvala na povratnoj informaciji!",
+        "rate_title": "⭐ Ocijeni aplikaciju i ostavi komentar",
+        "pseudo_ph": "Tvoj nadimak",
+        "comment_ph": "Tvoj komentar...",
+        "rate_btn": "Pošalji recenziju",
+        "rate_thanks": "🙏 Hvala na recenziji!",
         "lang_label": "🌍 Odaberi jezik",
     },
     "Español": {
@@ -134,8 +152,11 @@ LANGS = {
         "res": "Resultado",
         "history": "📜 Historial de diagnósticos",
         "copy_label": "📋 Texto para copia rápida:",
-        "rate_title": "⭐ Calificar la aplicación",
-        "rate_thanks": "🙏 ¡Gracias por tu valoración!",
+        "rate_title": "⭐ Califica la app y deja un comentario",
+        "pseudo_ph": "Tu apodo",
+        "comment_ph": "Tu comentario...",
+        "rate_btn": "Enviar opinión",
+        "rate_thanks": "🙏 ¡Gracias por tu comentario!",
         "lang_label": "🌍 Elegir idioma",
     },
     "Deutsch": {
@@ -153,7 +174,10 @@ LANGS = {
         "res": "Ergebnis",
         "history": "📜 Diagnoseverlauf",
         "copy_label": "📋 Text zum schnellen Kopieren:",
-        "rate_title": "⭐ App bewerten",
+        "rate_title": "⭐ App bewerten & Kommentar hinterlassen",
+        "pseudo_ph": "Dein Pseudonym",
+        "comment_ph": "Dein Feedback...",
+        "rate_btn": "Bewertung absenden",
         "rate_thanks": "🙏 Danke für dein Feedback!",
         "lang_label": "🌍 Sprache wählen",
     },
@@ -191,7 +215,7 @@ st.markdown(
         transform: translateY(-1px);
     }
 
-    .stTextInput>div>div>input, .stSelectbox>div>div>div {
+    .stTextInput>div>div>input, .stSelectbox>div>div>div, .stTextArea>div>div>textarea {
         background-color: rgba(15, 23, 42, 0.6);
         border-radius: 14px;
         border: 1px solid rgba(255, 255, 255, 0.12);
@@ -222,8 +246,8 @@ if "langue_choisie" not in st.session_state:
 if "historique" not in st.session_state:
   st.session_state["historique"] = []
 
-if "rating" not in st.session_state:
-  st.session_state["rating"] = 5
+if "all_reviews" not in st.session_state:
+  st.session_state["all_reviews"] = []
 
 langue_cle = st.session_state["langue_choisie"]
 t = LANGS[langue_cle]
@@ -304,15 +328,39 @@ if nouvelle_langue != langue_cle:
   st.session_state["langue_choisie"] = nouvelle_langue
   st.rerun()
 
-# SYSTÈME DE NOTATION 5 ÉTOILES TOUT EN BAS
+# SYSTÈMES DE NOTES ET COMMENTAIRES TOUT EN BAS
 st.markdown(f"### {t['rate_title']}")
 etoiles = ["⭐", "⭐⭐", "⭐⭐⭐", "⭐⭐⭐⭐", "⭐⭐⭐⭐⭐"]
-note_selectionnee = st.select_slider(
-    "",
-    options=etoiles,
-    value=etoiles[st.session_state["rating"] - 1],
-    label_visibility="collapsed",
-)
-st.session_state["rating"] = etoiles.index(note_selectionnee) + 1
-st.caption(t["rate_thanks"])
+
+col_r1, col_r2 = st.columns([1, 2])
+with col_r1:
+  note_selectionnee = st.select_slider(
+      "Note", options=etoiles, value="⭐⭐⭐⭐⭐", label_visibility="collapsed"
+  )
+with col_r2:
+  pseudo_input = st.text_input("Pseudo", placeholder=t["pseudo_ph"], label_visibility="collapsed")
+
+commentaire_input = st.text_area("Avis", placeholder=t["comment_ph"], label_visibility="collapsed")
+
+if st.button(t["rate_btn"]):
+  if pseudo_input.strip() and commentaire_input.strip():
+    st.session_state["all_reviews"].insert(
+        0,
+        {
+            "pseudo": pseudo_input.strip(),
+            "note": note_selectionnee,
+            "commentaire": commentaire_input.strip(),
+        },
+    )
+    st.success(t["rate_thanks"])
+  else:
+    st.warning("⚠️ Remplis ton pseudo et ton commentaire.")
+
+# Affichage des avis reçus si y'en a
+if st.session_state["all_reviews"]:
+  st.markdown("<br>", unsafe_allow_html=True)
+  for rev in st.session_state["all_reviews"]:
+    st.markdown(f"**{rev['pseudo']}** {rev['note']}")
+    st.caption(f'"{rev["commentaire"]}"')
+    st.divider()
 
