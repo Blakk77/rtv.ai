@@ -306,7 +306,7 @@ if st.session_state["historique"]:
   st.markdown(f"<br><small>{t['copy_label']}</small>", unsafe_allow_html=True)
   st.code(dernier["resultat"], language="markdown")
 
-# Historique dans un expander en bas
+# Historique dans un expander au milieu
 if len(st.session_state["historique"]) > 0:
   with st.expander(t["history"]):
     for idx, item in enumerate(st.session_state["historique"]):
@@ -328,7 +328,8 @@ if nouvelle_langue != langue_cle:
   st.session_state["langue_choisie"] = nouvelle_langue
   st.rerun()
 
-# SYSTÈMES DE NOTES ET COMMENTAIRES TOUT EN BAS
+# --- BLOC AVIS & COMMENTAIRES TOUT EN BAS ---
+st.markdown("---")
 st.markdown(f"### {t['rate_title']}")
 etoiles = ["⭐", "⭐⭐", "⭐⭐⭐", "⭐⭐⭐⭐", "⭐⭐⭐⭐⭐"]
 
@@ -356,7 +357,7 @@ if st.button(t["rate_btn"]):
   else:
     st.warning("⚠️ Remplis ton pseudo et ton commentaire.")
 
-# Affichage des avis reçus si y'en a
+# Affichage des avis reçus tout à la fin de la page
 if st.session_state["all_reviews"]:
   st.markdown("<br>", unsafe_allow_html=True)
   for rev in st.session_state["all_reviews"]:
