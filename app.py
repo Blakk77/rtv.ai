@@ -20,7 +20,8 @@ LANGS = {
         "res": "Résultat",
         "history": "📜 Historique des diagnostics",
         "copy_label": "📋 Texte brut pour copie rapide :",
-        "donate_text": "☕ Soutenir le projet (PayPal)",
+        "rate_title": "⭐ Noter l'application",
+        "rate_thanks": "🙏 Merci pour ton évaluation !",
         "lang_label": "🌍 Choisir la langue",
     },
     "English": {
@@ -38,7 +39,8 @@ LANGS = {
         "res": "Result",
         "history": "📜 Diagnosis History",
         "copy_label": "📋 Raw text for easy copying:",
-        "donate_text": "☕ Support the project (PayPal)",
+        "rate_title": "⭐ Rate this app",
+        "rate_thanks": "🙏 Thanks for your feedback!",
         "lang_label": "🌍 Choose Language",
     },
     "Русский": {
@@ -56,7 +58,8 @@ LANGS = {
         "res": "Результат",
         "history": "📜 История диагностик",
         "copy_label": "📋 Текст для быстрого копирования:",
-        "donate_text": "☕ Поддержать проект (PayPal)",
+        "rate_title": "⭐ Оценить приложение",
+        "rate_thanks": "🙏 Спасибо за оценку!",
         "lang_label": "🌍 Выбрать язык",
     },
     "Македонски": {
@@ -74,7 +77,8 @@ LANGS = {
         "res": "Резултат",
         "history": "📜 Историја на дијагностика",
         "copy_label": "📋 Текст за брзо копирање:",
-        "donate_text": "☕ Поддржи го проектот (PayPal)",
+        "rate_title": "⭐ Оцени ја апликацијата",
+        "rate_thanks": "🙏 Благодарам!",
         "lang_label": "🌍 Избери јазик",
     },
     "Српски / Srpski": {
@@ -92,7 +96,8 @@ LANGS = {
         "res": "Rezultat",
         "history": "📜 Istorija dijagnostike",
         "copy_label": "📋 Tekst za lako kopiranje:",
-        "donate_text": "☕ Podržite projekat (PayPal)",
+        "rate_title": "⭐ Oceni aplikaciju",
+        "rate_thanks": "🙏 Hvala na oceni!",
         "lang_label": "🌍 Izaberi jezik",
     },
     "Hrvatski": {
@@ -110,7 +115,8 @@ LANGS = {
         "res": "Rezultat",
         "history": "📜 Povijest dijagnostike",
         "copy_label": "📋 Tekst za jednostavno kopiranje:",
-        "donate_text": "☕ Podržite projekt (PayPal)",
+        "rate_title": "⭐ Ocijeni aplikaciju",
+        "rate_thanks": "🙏 Hvala na povratnoj informaciji!",
         "lang_label": "🌍 Odaberi jezik",
     },
     "Español": {
@@ -128,7 +134,8 @@ LANGS = {
         "res": "Resultado",
         "history": "📜 Historial de diagnósticos",
         "copy_label": "📋 Texto para copia rápida:",
-        "donate_text": "☕ Apoyar el proyecto (PayPal)",
+        "rate_title": "⭐ Calificar la aplicación",
+        "rate_thanks": "🙏 ¡Gracias por tu valoración!",
         "lang_label": "🌍 Elegir idioma",
     },
     "Deutsch": {
@@ -146,7 +153,8 @@ LANGS = {
         "res": "Ergebnis",
         "history": "📜 Diagnoseverlauf",
         "copy_label": "📋 Text zum schnellen Kopieren:",
-        "donate_text": "☕ Projekt unterstützen (PayPal)",
+        "rate_title": "⭐ App bewerten",
+        "rate_thanks": "🙏 Danke für dein Feedback!",
         "lang_label": "🌍 Sprache wählen",
     },
 }
@@ -189,27 +197,6 @@ st.markdown(
         border: 1px solid rgba(255, 255, 255, 0.12);
         color: white;
     }
-
-    /* Style du bouton PayPal pro */
-    .paypal-btn {
-        display: block;
-        width: 100%;
-        text-align: center;
-        background: rgba(15, 23, 42, 0.7);
-        color: #0070ba !important;
-        font-weight: 600;
-        padding: 0.6rem;
-        border-radius: 14px;
-        border: 1px solid rgba(0, 112, 186, 0.4);
-        text-decoration: none;
-        transition: all 0.3s ease;
-        margin-top: 1rem;
-    }
-    .paypal-btn:hover {
-        background: rgba(0, 112, 186, 0.15);
-        border-color: #0070ba;
-        box-shadow: 0 4px 12px rgba(0, 112, 186, 0.2);
-    }
     </style>
 """,
     unsafe_allow_html=True,
@@ -234,6 +221,9 @@ if "langue_choisie" not in st.session_state:
 
 if "historique" not in st.session_state:
   st.session_state["historique"] = []
+
+if "rating" not in st.session_state:
+  st.session_state["rating"] = 5
 
 langue_cle = st.session_state["langue_choisie"]
 t = LANGS[langue_cle]
@@ -313,4 +303,16 @@ nouvelle_langue = st.selectbox(
 if nouvelle_langue != langue_cle:
   st.session_state["langue_choisie"] = nouvelle_langue
   st.rerun()
+
+# SYSTÈME DE NOTATION 5 ÉTOILES TOUT EN BAS
+st.markdown(f"### {t['rate_title']}")
+etoiles = ["⭐", "⭐⭐", "⭐⭐⭐", "⭐⭐⭐⭐", "⭐⭐⭐⭐⭐"]
+note_selectionnee = st.select_slider(
+    "",
+    options=etoiles,
+    value=etoiles[st.session_state["rating"] - 1],
+    label_visibility="collapsed",
+)
+st.session_state["rating"] = etoiles.index(note_selectionnee) + 1
+st.caption(t["rate_thanks"])
 
