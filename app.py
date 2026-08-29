@@ -223,7 +223,7 @@ st.markdown(
         background-attachment: fixed;
     }
     
-    /* Force tout le texte de l'application en blanc éclatant */
+    /* Force tout le texte en blanc éclatant */
     .stApp, div[data-testid="stMarkdownContainer"], p, span, label {
         color: #ffffff !important;
     }
@@ -399,7 +399,7 @@ else:
     else:
       st.warning("⚠️ Remplis ton pseudo et ton commentaire.")
 
-# Affichage des avis enregistrés globalement + bouton de reset admin
+# Affichage des avis enregistrés globalement (sans bouton admin)
 tous_les_avis = charger_avis()
 if tous_les_avis:
   st.markdown("<br>", unsafe_allow_html=True)
@@ -407,9 +407,3 @@ if tous_les_avis:
     st.markdown(f"**{rev['pseudo']}** {rev['note']}")
     st.caption(f'"{rev["commentaire"]}"')
     st.divider()
-
-  if st.button("🗑️ Vider tous les avis (Admin)"):
-    if os.path.exists(REVIEWS_FILE):
-      os.remove(REVIEWS_FILE)
-    st.session_state["a_deja_vote"] = False
-    st.rerun()
