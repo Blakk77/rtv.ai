@@ -168,7 +168,7 @@ st.markdown(
     "# 🔧 Rtv.ai <span style='color:#ff4b4b;'>Pro</span>", unsafe_allow_html=True
 )
 
-# La Mercedes CLS dessinée en lignes épurées (SVG direct visible sur mobile et PC)
+# La Mercedes CLS en SVG direct
 st.markdown(
     """
     <div style="text-align: center; margin-bottom: 20px;">
@@ -205,4 +205,46 @@ with col1:
 with col2:
   modele = st.text_input(t["modele"], placeholder=t["modele_ph"])
 
-probleme = st.text_input(t
+probleme = st.text_input(t["probleme"], placeholder=t["probleme_ph"])
+
+if st.button(t["btn"]):
+  if not api_key:
+    st.error(t["err_key"])
+  elif modele and probleme:
+    try:
+      with st.spinner(t["spinner"]):
+        model = genai.GenerativeModel("gemini-3.6-flash")
+
+        prompt = f"""
+        Expert mécanicien. Véhicule: {marque_choisie} {modele}. Symptôme: "{probleme}".
+        RÈGLE ABSOLUE : Réponds entièrement en {langue_cle}.
+        Donne une réponse ultra-courte, sans phrase de politesse, style mécano pressé.
+
+        1. Coupable numéro 1 (La pièce précise en 1 ligne).
+        2. Test rapide (Comment vérifier en 1 minute).
+        3. Serrage / Référence (Si applicable).
+        """
+
+        response = model.generate_content(prompt)
+
+        st.markdown("---")
+        st.markdown(
+            f"### 📊 {t['res']} : {marque_choisie} ({modele}) - {probleme}"
+        )
+        st.markdown(response.text)
+
+    except Exception as e:
+      st.error(f"{t['err_gen']}{e}")
+  else:
+    st.warning(t["warn"])
+
+st.markdown("<br><br>", unsafe_allow_html=True)
+st.markdown("---")
+nouvelle_langue = st.selectbox(
+    LANGS[langue_cle]["lang_label"],
+    list(LANGS.keys()),
+    index=list(LANGS.keys()).index(langue_cle),
+)
+if nouvelle_langue != langue_cle:
+  st.session_state["langue_choisie"] = nouvelle_langue
+  st.rerun()
