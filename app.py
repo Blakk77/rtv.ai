@@ -2,7 +2,7 @@ import os
 import streamlit as st
 import google.generativeai as genai
 
-st.set_page_config(page_title="Rtv.ai Pro", page_icon="🔧", layout="centered")
+st.set_page_config(page_title="Rtv.ai Expert méchanique", page_icon="🔧", layout="centered")
 
 st.markdown(
     """
