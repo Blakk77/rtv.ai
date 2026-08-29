@@ -26,10 +26,74 @@ with st.sidebar:
   )
 
 est_admin = (
-    pass_input == "Adminmkd" or st.query_params.get("admin") == "Adminmkd"
+    pass_input.strip().lower() == "adminmkd"
+    or st.query_params.get("admin", "").lower() == "adminmkd"
 )
 
 if est_admin:
+  st.session_state["dernier_clic"] = 0
+  st.toast("🔑 Mode Admin activé !", icon="🔓")
+
+# --- 4. CALCUL DU TEMPS ---
+temps_ecoule = time.time() - st.session_state["dernier_clic"]
+temps_restant = int(DUREE_ATTENTE - temps_ecoule)
+
+# --- 5. BANDEAU ADMIN TOUT EN HAUT ---
+if est_admin:
+  st.markdown(
+      """
+        <div style="background-color: rgba(255, 42, 42, 0.15); border: 1px solid #ff2a2a; color: #ff4d4d; padding: 8px 15px; border-radius: 8px; text-align: center; font-weight: bold; margin-bottom: 20px;">
+            ⚡ Compte Admin connecté — Cooldown désactivé
+        </div>
+    """,
+      unsafe_allow_html=True,
+  )
+
+# --- 6. STYLE CSS ---
+st.markdown(
+    """
+    <style>
+    .stApp {
+        background: linear-gradient(rgba(7, 9, 19, 0.88), rgba(19, 24, 41, 0.92)),
+                    url("https://images.unsplash.com/photo-1617814076367-b759c7d7e738?auto=format&fit=crop&w=1200&q=80");
+        background-size: cover; background-attachment: fixed;
+    }
+    h1, h2, h3, p, label, div { color: #ffffff !important; }
+    .titre-pro { color: #ff2a2a !important; text-shadow: 0 0 10px rgba(255, 42, 42, 0.5); }
+    
+    div.stButton > button {
+        background: linear-gradient(90deg, #ff0000 0%, #990000 100%) !important;
+        color: white !important; border: 2px solid #ff4d4d !important;
+        border-radius: 12px !important; font-weight: 800 !important;
+        padding: 0.8rem !important; width: 100% !important;
+    }
+    [data-baseweb="input"], [data-baseweb="select"], [data-baseweb="textarea"] {
+        background-color: rgba(0, 0, 0, 0.75) !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        border-radius: 10px !important;
+    }
+    </style>
+""",
+    unsafe_allow_html=True,
+)
+
+st.markdown(
+    "# 🔧 Rtv.ai <span class='titre-pro'>Pro</span>", unsafe_allow_html=True
+)
+
+# --- 7. FORMULAIRE VEHICULE ---
+col1, col2 = st.columns(2)
+with col1:
+  marque_choisie = st.selectbox(
+      "Marque",
+      ["Mercedes-Benz", "BMW", "Audi", "Volkswagen", "Renault", "Peugeot"],
+  )
+with col2:
+  modele = st.text_input("Modèle & Motorisation", placeholder="ex: W212 E350")
+
+probleme = st.text_input(
+    "Symptôme ou code erreur", placeholder="ex: bruit injecteur ou P0299"
+)
   st.session_state["dernier_clic"] = 0
 
 # --- 4. CALCUL DU TEMPS ---
