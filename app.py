@@ -5,10 +5,7 @@ import google.generativeai as genai
 import streamlit as st
 from google.api_core.exceptions import ResourceExhausted
 
-st.set_page_config(
-    page_title="Rtv.ai Pro",
-    page_icon="https://cdn-icons-png.flaticon.com/512/1038/1038155.png",  # Clé à molette HD
-    layout="centered",
+st.set_page_config(page_title="Rtv.ai Pro", page_icon="🔧", layout="centered")
 )
 
 # --- PARAMÈTRES ET SÉCURITÉ ---
