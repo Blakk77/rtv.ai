@@ -8,7 +8,7 @@ from google.api_core.exceptions import ResourceExhausted
 st.set_page_config(page_title="Rtv.ai Pro", page_icon="🔧", layout="centered")
 
 # --- 1. CONSTANTES & CONFIG ---
-DUREE_ATTENTE = 60  # 60 sec de cooldown
+DUREE_ATTENTE = 60
 REVIEWS_FILE = "avis.json"
 
 # --- 2. SESSION STATES ---
@@ -31,9 +31,9 @@ est_admin = (
 )
 
 if est_admin:
-    st.session_state["dernier_clic"] = 0
-    st.toast("🔑 Mode Admin activé !", icon="🔓")
-  
+  st.session_state["dernier_clic"] = 0
+  st.toast("🔑 Mode Admin activé !", icon="🔓")
+
 # --- 4. CALCUL DU TEMPS ---
 temps_ecoule = time.time() - st.session_state["dernier_clic"]
 temps_restant = int(DUREE_ATTENTE - temps_ecoule)
@@ -48,36 +48,6 @@ if est_admin:
     """,
       unsafe_allow_html=True,
   )
-
-# --- 6. STYLE CSS ---
-st.markdown(
-    """
-    <style>
-    .stApp {
-        background: linear-gradient(rgba(7, 9, 19, 0.88), rgba(19, 24, 41, 0.92)),
-                    url("https://images.unsplash.com/photo-1617814076367-b759c7d7e738?auto=format&fit=crop&w=1200&q=80");
-        background-size: cover; background-attachment: fixed;
-    }
-    h1, h2, h3, p, label, div { color: #ffffff !important; }
-    .titre-pro { color: #ff2a2a !important; text-shadow: 0 0 10px rgba(255, 42, 42, 0.5); }
-    
-    div.stButton > button {
-        background: linear-gradient(90deg, #ff0000 0%, #990000 100%) !important;
-        color: white !important; border: 2px solid #ff4d4d !important;
-        border-radius: 12px !important; font-weight: 800 !important;
-        padding: 0.8rem !important; width: 100% !important;
-    }
-    [data-baseweb="input"], [data-baseweb="select"], [data-baseweb="textarea"] {
-        background-color: rgba(0, 0, 0, 0.75) !important;
-        border: 1px solid rgba(255, 255, 255, 0.2) !important;
-        border-radius: 10px !important;
-    }
-    </style>
-""",
-    unsafe_allow_html=True,
-)
-
-st.markdown(
     "# 🔧 Rtv.ai <span class='titre-pro'>Pro</span>", unsafe_allow_html=True
 )
 
