@@ -314,9 +314,3 @@ if nouvelle_langue != langue_cle:
   st.session_state["langue_choisie"] = nouvelle_langue
   st.rerun()
 
-# BOUTON DONATION PAYPAL TOUT EN BAS (Remplace l'URL par ton lien paypal.me)
-st.markdown(
-    f'<a href="https://paypal.me/toncompte" target="_blank"'
-    f' class="paypal-btn">{t["donate_text"]}</a>',
-    unsafe_allow_html=True,
-)
