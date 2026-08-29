@@ -79,8 +79,8 @@ if st.button("Lancer l'analyse technique approfondie"):
   elif modele_motorisation and probleme:
     try:
       with st.spinner("Analyse technique en cours..."):
-        # Modèle mis à jour pour correspondre à l'API active
-        model = genai.GenerativeModel("gemini-2.5-flash")
+        # Modèle exigé par l'API
+        model = genai.GenerativeModel("gemini-3.6-flash")
 
         prompt = f"""
         Agis en tant qu'expert technique automobile de premier plan (ingénieur diagnostic / Autodata).
