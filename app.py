@@ -4,7 +4,6 @@ import google.generativeai as genai
 
 st.set_page_config(page_title="Rtv.ai Pro", page_icon="🔧", layout="centered")
 
-# Dictionnaire complet avec toutes les langues demandées
 LANGS = {
     "Français": {
         "brand_sub": "Pro",
@@ -19,7 +18,6 @@ LANGS = {
         "err_gen": "Erreur : ",
         "warn": "⚠️ Remplis tous les champs.",
         "res": "Résultat",
-        "sidebar_title": "Paramètres",
     },
     "English": {
         "brand_sub": "Pro",
@@ -34,7 +32,6 @@ LANGS = {
         "err_gen": "Error: ",
         "warn": "⚠️ Please fill in all fields.",
         "res": "Result",
-        "sidebar_title": "Settings",
     },
     "Русский": {
         "brand_sub": "Pro",
@@ -49,7 +46,6 @@ LANGS = {
         "err_gen": "Ошибка: ",
         "warn": "⚠️ Заполните все поля.",
         "res": "Результат",
-        "sidebar_title": "Настройки",
     },
     "Македонски": {
         "brand_sub": "Pro",
@@ -64,7 +60,6 @@ LANGS = {
         "err_gen": "Грешка: ",
         "warn": "⚠️ Пополнете ги сите полиња.",
         "res": "Резултат",
-        "sidebar_title": "Подесувања",
     },
     "Српски / Srpski": {
         "brand_sub": "Pro",
@@ -79,7 +74,6 @@ LANGS = {
         "err_gen": "Greška: ",
         "warn": "⚠️ Popunite sva polja.",
         "res": "Rezultat",
-        "sidebar_title": "Podešavanja",
     },
     "Hrvatski": {
         "brand_sub": "Pro",
@@ -94,7 +88,6 @@ LANGS = {
         "err_gen": "Greška: ",
         "warn": "⚠️ Ispunite sva polja.",
         "res": "Rezultat",
-        "sidebar_title": "Postavke",
     },
     "Español": {
         "brand_sub": "Pro",
@@ -109,7 +102,6 @@ LANGS = {
         "err_gen": "Error: ",
         "warn": "⚠️ Rellena todos los campos.",
         "res": "Resultado",
-        "sidebar_title": "Ajustes",
     },
     "Deutsch": {
         "brand_sub": "Pro",
@@ -124,14 +116,12 @@ LANGS = {
         "err_gen": "Fehler: ",
         "warn": "⚠️ Bitte alle Felder ausfüllen.",
         "res": "Ergebnis",
-        "sidebar_title": "Einstellungen",
     },
 }
 
 with st.sidebar:
-  # On récupère dynamiquement le titre de la sidebar selon la langue active
   langue_cle = st.selectbox(
-      "🌍 Langue", list(LANGS.keys()), label_visibility="visible"
+      "🌍 Langue / Language", list(LANGS.keys()), label_visibility="visible"
   )
 
 t = LANGS[langue_cle]
@@ -139,23 +129,39 @@ t = LANGS[langue_cle]
 st.markdown(
     """
     <style>
+    /* Fond global de l'appli avec un beau dégradé sombre et profond */
     .stApp {
-        background: linear-gradient(145deg, #0b0f19 0%, #1e2538 40%, #0d121c 100%);
+        background: linear-gradient(135deg, #070913 0%, #131829 50%, #070913 100%);
     }
+    
+    /* Harmonisation totale de la sidebar pour dégager ce vieux gris moche */
+    [data-testid="stSidebar"] {
+        background: linear-gradient(180deg, #090d19 0%, #0f1523 100%);
+        border-right: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    /* Style futuriste pour les boutons */
     .stButton>button {
         width: 100%;
-        background-color: #ff4b4b;
+        background: linear-gradient(135deg, #ff4b4b 0%, #e03131 100%);
         color: white;
         font-weight: bold;
-        border-radius: 8px;
-        padding: 0.6rem;
+        border-radius: 10px;
+        padding: 0.65rem;
         border: none;
-        box-shadow: 0 4px 12px rgba(255, 75, 75, 0.3);
+        box-shadow: 0 4px 15px rgba(255, 75, 75, 0.4);
+        transition: all 0.3s ease;
     }
     .stButton>button:hover { 
-        background-color: #ff2b2b; 
-        color: white; 
-        box-shadow: 0 6px 16px rgba(255, 43, 43, 0.5);
+        background: linear-gradient(135deg, #ff2b2b 0%, #c92a2a 100%);
+        box-shadow: 0 6px 20px rgba(255, 43, 43, 0.6);
+        transform: translateY(-1px);
+    }
+
+    /* Amélioration des inputs pour qu'ils soient raccord */
+    .stTextInput>div>div>input, .stSelectbox>div>div>div {
+        background-color: rgba(255, 255, 255, 0.03);
+        border-radius: 8px;
     }
     </style>
 """,
