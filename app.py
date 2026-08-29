@@ -130,20 +130,13 @@ LANGS = {
 st.markdown(
     """
     <style>
-    /* Fond global avec dégradé sombre et la Mercedes CLS en filigrane vectoriel simple */
     .stApp {
         background: linear-gradient(135deg, #070913 0%, #131829 50%, #070913 100%);
-        background-image: 
-            linear-gradient(135deg, rgba(7, 9, 19, 0.93) 0%, rgba(19, 24, 41, 0.93) 50%, rgba(7, 9, 19, 0.93) 100%),
-            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 300' opacity='0.06'%3E%3Cpath fill='none' stroke='%23ffffff' stroke-width='1.5' d='M50,200 Q150,180 250,190 T450,185 Q550,170 650,195 L720,220 L750,200 L730,175 Q680,140 580,135 Q450,130 350,145 Q200,150 100,185 Z'/%3E%3Cpath fill='none' stroke='%23ffffff' stroke-width='1' d='M180,185 Q250,155 380,155 Q500,155 580,175 M220,190 L240,220 M580,190 L560,220'/%3E%3C/svg%3E");
-        background-repeat: no-repeat;
-        background-position: center 70%;
-        background-size: 80% auto;
     }
     
-    /* Bouton avec bords bien arrondis */
-    .stButton>button {
-        width: 100%;
+    div.stButton > button {
+        width: 100% !important;
+        display: block !important;
         background: linear-gradient(135deg, #ff4b4b 0%, #e03131 100%);
         color: white;
         font-weight: bold;
@@ -152,14 +145,14 @@ st.markdown(
         border: none;
         box-shadow: 0 4px 15px rgba(255, 75, 75, 0.4);
         transition: all 0.3s ease;
+        margin: 0 auto;
     }
-    .stButton>button:hover { 
+    div.stButton > button:hover { 
         background: linear-gradient(135deg, #ff2b2b 0%, #c92a2a 100%);
         box-shadow: 0 6px 20px rgba(255, 43, 43, 0.6);
         transform: translateY(-1px);
     }
 
-    /* Champs de saisie ultra arrondis */
     .stTextInput>div>div>input, .stSelectbox>div>div>div {
         background-color: rgba(255, 255, 255, 0.04);
         border-radius: 14px;
@@ -170,8 +163,22 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
+# Titre de l'app
 st.markdown(
     "# 🔧 Rtv.ai <span style='color:#ff4b4b;'>Pro</span>", unsafe_allow_html=True
+)
+
+# La Mercedes CLS dessinée en lignes épurées (SVG direct visible sur mobile et PC)
+st.markdown(
+    """
+    <div style="text-align: center; margin-bottom: 20px;">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 160" width="100%" style="opacity: 0.18; max-width: 400px;">
+            <path fill="none" stroke="#ffffff" stroke-width="2" d="M40,120 Q100,105 180,110 T350,105 Q450,95 530,115 L560,130 L575,115 L560,95 Q520,70 450,65 Q350,60 270,75 Q150,80 70,110 Z"/>
+            <path fill="none" stroke="#ffffff" stroke-width="1.2" d="M140,112 Q200,85 300,85 Q400,85 450,98 M170,115 L190,135 M450,115 L435,135"/>
+        </svg>
+    </div>
+    """,
+    unsafe_allow_html=True,
 )
 
 api_key = None
@@ -183,20 +190,13 @@ elif "GEMINI_API_KEY" in os.environ:
 if api_key:
   genai.configure(api_key=api_key)
 
-col1, col2 = st.columns(2)
-with col1:
-  # Langue par défaut en haut pour que les variables existent direct
-  # On va utiliser le sélecteur du bas pour changer la langue active
-  pass
-
-# On récupère d'abord la langue via un état de session pour que le selectbox du bas pilote tout
 if "langue_choisie" not in st.session_state:
   st.session_state["langue_choisie"] = "Français"
 
 langue_cle = st.session_state["langue_choisie"]
 t = LANGS[langue_cle]
 
-# Inputs principaux
+col1, col2 = st.columns(2)
 with col1:
   marque_choisie = st.selectbox(
       t["marque"],
@@ -205,47 +205,4 @@ with col1:
 with col2:
   modele = st.text_input(t["modele"], placeholder=t["modele_ph"])
 
-probleme = st.text_input(t["probleme"], placeholder=t["probleme_ph"])
-
-if st.button(t["btn"]):
-  if not api_key:
-    st.error(t["err_key"])
-  elif modele and probleme:
-    try:
-      with st.spinner(t["spinner"]):
-        model = genai.GenerativeModel("gemini-3.6-flash")
-
-        prompt = f"""
-        Expert mécanicien. Véhicule: {marque_choisie} {modele}. Symptôme: "{probleme}".
-        RÈGLE ABSOLUE : Réponds entièrement en {langue_cle}.
-        Donne une réponse ultra-courte, sans phrase de politesse, style mécano pressé.
-
-        1. Coupable numéro 1 (La pièce précise en 1 ligne).
-        2. Test rapide (Comment vérifier en 1 minute).
-        3. Serrage / Référence (Si applicable).
-        """
-
-        response = model.generate_content(prompt)
-
-        st.markdown("---")
-        st.markdown(
-            f"### 📊 {t['res']} : {marque_choisie} ({modele}) - {probleme}"
-        )
-        st.markdown(response.text)
-
-    except Exception as e:
-      st.error(f"{t['err_gen']}{e}")
-  else:
-    st.warning(t["warn"])
-
-# --- SÉLECTEUR DE LANGUE EN BAS DE PAGE (Parfait pour mobile) ---
-st.markdown("<br><br>", unsafe_allow_html=True)
-st.markdown("---")
-nouvelle_langue = st.selectbox(
-    LANGS[langue_cle]["lang_label"],
-    list(LANGS.keys()),
-    index=list(LANGS.keys()).index(langue_cle),
-)
-if nouvelle_langue != langue_cle:
-  st.session_state["langue_choisie"] = nouvelle_langue
-  st.rerun()
+probleme = st.text_input(t
