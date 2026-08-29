@@ -31,7 +31,7 @@ est_admin = (
 )
 
 if est_admin:
-  st.session_state["dernier_clic"] = 0
+       st.session_state["dernier_clic"] = 0
   st.toast("🔑 Mode Admin activé !", icon="🔓")
 
 # --- 4. CALCUL DU TEMPS ---
@@ -94,7 +94,6 @@ with col2:
 probleme = st.text_input(
     "Symptôme ou code erreur", placeholder="ex: bruit injecteur ou P0299"
 )
-  st.session_state["dernier_clic"] = 0
 
 # --- 4. CALCUL DU TEMPS ---
 temps_ecoule = time.time() - st.session_state["dernier_clic"]
