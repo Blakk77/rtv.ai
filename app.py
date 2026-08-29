@@ -5,18 +5,18 @@ import google.generativeai as genai
 import streamlit as st
 from google.api_core.exceptions import ResourceExhausted
 
-st.set_page_config(page_title="Rtv.ai Pro", page_icon="🔧", layout="centered")
+st.set_page_config(page_title="Rtv.ai Pro V1", page_icon="🔧", layout="centered")
 
 # --- PARAMÈTRES ET SÉCURITÉ ---
-DUREE_ATTENTE = 60  # 60 secondes de cooldown
-PSEUDO_ADMIN = "Meca91"  # Ton pseudo pour ne JAMAIS attendre
+DUREE_ATTENTE = 30  # 60 secondes de cooldown
+PSEUDO_ADMIN = "Adminmkd"  # Ton pseudo pour ne JAMAIS attendre
 REVIEWS_FILE = "avis.json"
 
 LANGS = {
     "Français": {
         "marque": "Marque",
         "modele": "Modèle & Motorisation",
-        "modele_ph": "ex: W212 E350 V6",
+        "modele_ph": "ex: W212 E350",
         "probleme": "Symptôme ou code erreur",
         "probleme_ph": "ex: bruit injecteur ou P0299",
         "btn": "LANCER LE DIAGNOSTIC RAPIDE",
