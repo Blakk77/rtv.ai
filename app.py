@@ -20,6 +20,7 @@ LANGS = {
         "res": "Résultat",
         "history": "📜 Historique des diagnostics",
         "copy_label": "📋 Texte brut pour copie rapide :",
+        "donate_text": "☕ Soutenir le projet (PayPal)",
         "lang_label": "🌍 Choisir la langue",
     },
     "English": {
@@ -37,6 +38,7 @@ LANGS = {
         "res": "Result",
         "history": "📜 Diagnosis History",
         "copy_label": "📋 Raw text for easy copying:",
+        "donate_text": "☕ Support the project (PayPal)",
         "lang_label": "🌍 Choose Language",
     },
     "Русский": {
@@ -54,6 +56,7 @@ LANGS = {
         "res": "Результат",
         "history": "📜 История диагностик",
         "copy_label": "📋 Текст для быстрого копирования:",
+        "donate_text": "☕ Поддержать проект (PayPal)",
         "lang_label": "🌍 Выбрать язык",
     },
     "Македонски": {
@@ -71,6 +74,7 @@ LANGS = {
         "res": "Резултат",
         "history": "📜 Историја на дијагностика",
         "copy_label": "📋 Текст за брзо копирање:",
+        "donate_text": "☕ Поддржи го проектот (PayPal)",
         "lang_label": "🌍 Избери јазик",
     },
     "Српски / Srpski": {
@@ -88,6 +92,7 @@ LANGS = {
         "res": "Rezultat",
         "history": "📜 Istorija dijagnostike",
         "copy_label": "📋 Tekst za lako kopiranje:",
+        "donate_text": "☕ Podržite projekat (PayPal)",
         "lang_label": "🌍 Izaberi jezik",
     },
     "Hrvatski": {
@@ -105,6 +110,7 @@ LANGS = {
         "res": "Rezultat",
         "history": "📜 Povijest dijagnostike",
         "copy_label": "📋 Tekst za jednostavno kopiranje:",
+        "donate_text": "☕ Podržite projekt (PayPal)",
         "lang_label": "🌍 Odaberi jezik",
     },
     "Español": {
@@ -122,6 +128,7 @@ LANGS = {
         "res": "Resultado",
         "history": "📜 Historial de diagnósticos",
         "copy_label": "📋 Texto para copia rápida:",
+        "donate_text": "☕ Apoyar el proyecto (PayPal)",
         "lang_label": "🌍 Elegir idioma",
     },
     "Deutsch": {
@@ -139,6 +146,7 @@ LANGS = {
         "res": "Ergebnis",
         "history": "📜 Diagnoseverlauf",
         "copy_label": "📋 Text zum schnellen Kopieren:",
+        "donate_text": "☕ Projekt unterstützen (PayPal)",
         "lang_label": "🌍 Sprache wählen",
     },
 }
@@ -180,6 +188,27 @@ st.markdown(
         border-radius: 14px;
         border: 1px solid rgba(255, 255, 255, 0.12);
         color: white;
+    }
+
+    /* Style du bouton PayPal pro */
+    .paypal-btn {
+        display: block;
+        width: 100%;
+        text-align: center;
+        background: rgba(15, 23, 42, 0.7);
+        color: #0070ba !important;
+        font-weight: 600;
+        padding: 0.6rem;
+        border-radius: 14px;
+        border: 1px solid rgba(0, 112, 186, 0.4);
+        text-decoration: none;
+        transition: all 0.3s ease;
+        margin-top: 1rem;
+    }
+    .paypal-btn:hover {
+        background: rgba(0, 112, 186, 0.15);
+        border-color: #0070ba;
+        box-shadow: 0 4px 12px rgba(0, 112, 186, 0.2);
     }
     </style>
 """,
@@ -260,7 +289,6 @@ if st.session_state["historique"]:
   st.markdown(f"### 📊 {t['res']} : {dernier['vehicule']} - {dernier['symptome']}")
   st.markdown(dernier["resultat"])
 
-  # Le bouton de copie rapide avec un titre clair au-dessus
   st.markdown(f"<br><small>{t['copy_label']}</small>", unsafe_allow_html=True)
   st.code(dernier["resultat"], language="markdown")
 
@@ -275,6 +303,8 @@ if len(st.session_state["historique"]) > 0:
 
 st.markdown("<br><br>", unsafe_allow_html=True)
 st.markdown("---")
+
+# Sélecteur de langue en bas
 nouvelle_langue = st.selectbox(
     LANGS[langue_cle]["lang_label"],
     list(LANGS.keys()),
@@ -283,3 +313,10 @@ nouvelle_langue = st.selectbox(
 if nouvelle_langue != langue_cle:
   st.session_state["langue_choisie"] = nouvelle_langue
   st.rerun()
+
+# BOUTON DONATION PAYPAL TOUT EN BAS (Remplace l'URL par ton lien paypal.me)
+st.markdown(
+    f'<a href="https://paypal.me/toncompte" target="_blank"'
+    f' class="paypal-btn">{t["donate_text"]}</a>',
+    unsafe_allow_html=True,
+)
