@@ -209,7 +209,7 @@ def sauvegarder_avis(liste_avis):
   with open(REVIEWS_FILE, "w", encoding="utf-8") as f:
     json.dump(liste_avis, f, ensure_ascii=False, indent=4)
 
-# --- DESIGN ULTRA CLEAN & SAAS (Fond Mercedes inchangé) ---
+# --- DESIGN ULTRA CLEAN / SAAS HAUT DE GAMME (Fond Mercedes intact) ---
 st.markdown(
     """
     <style>
@@ -229,51 +229,52 @@ st.markdown(
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
 
-    /* Boutons ultra-stylés effet néon/pro */
+    /* Bouton principal : effet néon rouge puissant, bordure lumineuse et arrondi clean */
     div.stButton > button {
         width: 100% !important;
         display: block !important;
-        background: linear-gradient(135deg, #ff3333 0%, #b30000 100%);
+        background: linear-gradient(135deg, #ff2a2a 0%, #b30000 100%);
         color: white;
         font-weight: 700;
-        letter-spacing: 0.5px;
-        border-radius: 12px;
-        padding: 0.8rem 1rem;
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        box-shadow: 0 8px 25px rgba(255, 51, 51, 0.35);
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        margin: 0 auto;
+        font-size: 1.05rem;
+        letter-spacing: 0.6px;
+        border-radius: 14px;
+        padding: 0.85rem 1rem;
+        border: 1px solid rgba(255, 100, 100, 0.4);
+        box-shadow: 0 0 20px rgba(255, 42, 42, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        margin: 0.5rem auto;
     }
     div.stButton > button:hover { 
         background: linear-gradient(135deg, #ff4d4d 0%, #cc0000 100%);
-        box-shadow: 0 12px 30px rgba(255, 51, 51, 0.55);
+        box-shadow: 0 0 30px rgba(255, 42, 42, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.5);
         transform: translateY(-2px);
-        border-color: rgba(255, 255, 255, 0.3);
+        border-color: rgba(255, 255, 255, 0.6);
     }
 
-    /* Champs de saisie (inputs) futuristes et sombres semi-transparents */
+    /* Champs de saisie ultra stylés style dark glass */
     .stTextInput>div>div>input, .stSelectbox>div>div>div, .stTextArea>div>div>textarea {
-        background-color: rgba(13, 17, 30, 0.75) !important;
-        border-radius: 12px !important;
-        border: 1px solid rgba(255, 255, 255, 0.12) !important;
+        background-color: rgba(10, 14, 26, 0.8) !important;
+        border-radius: 14px !important;
+        border: 1px solid rgba(255, 255, 255, 0.15) !important;
         color: white !important;
-        box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+        padding: 0.6rem 1rem !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     }
     .stTextInput>div>div>input:focus, .stTextArea>div>div>textarea:focus {
-        border-color: #ff3333 !important;
-        box-shadow: 0 0 10px rgba(255, 51, 51, 0.3) !important;
+        border-color: #ff2a2a !important;
+        box-shadow: 0 0 15px rgba(255, 42, 42, 0.35) !important;
     }
 
-    /* Expander et blocs d'historique look "Glassmorphism" */
+    /* Expander moderne */
     .streamlit-expanderHeader {
-        background-color: rgba(20, 27, 45, 0.6) !important;
-        border-radius: 12px !important;
-        border: 1px solid rgba(255, 255, 255, 0.08);
+        background-color: rgba(15, 23, 42, 0.75) !important;
+        border-radius: 14px !important;
+        border: 1px solid rgba(255, 255, 255, 0.12) !important;
     }
     
-    /* Séparateurs discrets */
     hr {
-        border-color: rgba(255, 255, 255, 0.1);
+        border-color: rgba(255, 255, 255, 0.12);
     }
     </style>
 """,
