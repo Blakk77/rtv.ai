@@ -5,29 +5,28 @@ import google.generativeai as genai
 import streamlit as st
 from google.api_core.exceptions import ResourceExhausted
 
-# --- ADRESSE SECRÈTE POUR TOI ---
-# Si tu mets "?admin=Adminmkd" dans l'adresse, t'as zéro limite
+st.set_page_config(page_title="Rtv.ai Pro", page_icon="🔧", layout="centered")
+
+# 1. ON DÉFINIT LES CONSTANTES EN PREMIER
+DUREE_ATTENTE = 60  # 60 secondes de cooldown
+REVIEWS_FILE = "avis.json"
+
+# 2. SESSION STATE
+if "historique" not in st.session_state:
+  st.session_state["historique"] = []
+if "dernier_clic" not in st.session_state:
+  st.session_state["dernier_clic"] = 0
+if "a_deja_vote" not in st.session_state:
+  st.session_state["a_deja_vote"] = False
+
+# 3. VERIF ADMIN VIA URL (?admin=Adminmkd)
 est_admin = st.query_params.get("admin") == "Adminmkd"
-
 if est_admin:
-    st.session_state["dernier_clic"] = 0  # Remet le compteur à zéro direct pour toi
+  st.session_state["dernier_clic"] = 0
 
+# 4. CALCUL DU TEMPS (Après avoir tout défini)
 temps_ecoule = time.time() - st.session_state["dernier_clic"]
 temps_restant = int(DUREE_ATTENTE - temps_ecoule)
-
-lancer_diag = False
-
-# Si c'est pas toi et qu'il reste du temps, ça bloque
-if not est_admin and temps_restant > 0:
-    st.warning(f"⏳ Serveur en pause. Patiente **{temps_restant} sec** avant le prochain diag.")
-    st.button(t["btn"], disabled=True)
-else:
-    if st.button(t["btn"]):
-        st.session_state["dernier_clic"] = time.time()
-        lancer_diag = True
-
-st.set_page_config(page_title="Rtv.ai Pro V1", page_icon="🔧", layout="centered")
-
 # --- PARAMÈTRES ET SÉCURITÉ ---
 DUREE_ATTENTE = 30  # 60 secondes de cooldown
 PSEUDO_ADMIN = "Adminmkd"  # Ton pseudo pour ne JAMAIS attendre
