@@ -2,7 +2,7 @@ import os
 import streamlit as st
 import google.generativeai as genai
 
-st.set_page_config(page_title="Rtv.ai Pro", page_icon="🔧", layout="centered")
+st.set_page_config(page_title="Rtv.ai", page_icon="🔧", layout="centered")
 
 st.markdown(
     """
@@ -31,7 +31,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-st.markdown("# 🔧 Rtv.ai <span style='color:#ff4b4b;'>Pro</span>", unsafe_allow_html=True)
+st.markdown("# 🔧 Rtv.ai <span style='color:#ff4b4b;'>Expert Méchanique</span>", unsafe_allow_html=True)
 
 api_key = None
 if "GEMINI_API_KEY" in st.secrets:
