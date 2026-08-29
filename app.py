@@ -1,17 +1,13 @@
 import streamlit as st
 
-# Configuration de la page
 st.set_page_config(
     page_title="Rtv.ai - Atelier Pro", page_icon="🔧", layout="centered"
 )
 
-# Design CSS custom pour un look plus moderne et pro (type dashboard atelier)
 st.markdown(
     """
     <style>
-    .main {
-        background-color: #0e1117;
-    }
+    .main { background-color: #0e1117; }
     .stButton>button {
         width: 100%;
         background-color: #ff4b4b;
@@ -21,32 +17,23 @@ st.markdown(
         padding: 0.6rem;
         border: none;
     }
-    .stButton>button:hover {
-        background-color: #ff2b2b;
-        color: white;
-    }
-    .card-box {
-        background-color: #161a22;
-        padding: 20px;
-        border-radius: 10px;
-        border: 1px solid #30363d;
-        margin-bottom: 20px;
-    }
+    .stButton>button:hover { background-color: #ff2b2b; color: white; }
     </style>
 """,
     unsafe_allow_html=True,
 )
 
-# En-tête stylé
-st.markdown("# 🔧 Rtv.ai <span style='color:#ff4b4b;'>Pro Diagnostic</span>", unsafe_allow_html=True)
+st.markdown(
+    "# 🔧 Rtv.ai <span style='color:#ff4b4b;'>Pro Diagnostic</span>",
+    unsafe_allow_html=True,
+)
 st.markdown(
     "<p style='color: #8b949e;'>Base de données technique constructeur"
-    " instantanée.</p>",
+    " ciblée.</p>",
     unsafe_allow_html=True,
 )
 st.markdown("---")
 
-# Formulaire principal en colonnes / blocs propres
 st.markdown("### 📋 1. Identification du Véhicule")
 marques = [
     "Mercedes-Benz",
@@ -67,93 +54,76 @@ with col2:
 
 st.markdown("### 🔍 2. Symptôme / Panne constatée")
 probleme = st.text_area(
-    "Description du problème",
+    "Description précise du problème",
     placeholder=(
-        "ex: Bruit suspect côté passager, perte de puissance à l'accélération..."
+        "ex: perte de puissance à l'accélération, fumée noire, bruit de"
+        " sifflement..."
     ),
     height=100,
 )
 
 st.markdown("<br>", unsafe_allow_html=True)
 
-# Base de données technique embarquée (Ultra rapide)
-db_technique = {
-    "Mercedes-Benz": {
-        "specs_generales": (
-            "Capacité huile V6 : 7.0L - 8.0L (Norme MB 229.51/52). Couples"
-            " serrage roues : 150 Nm."
-        ),
-        "pannes_frequentes": [
-            "Bruit / Couinement côté droit : Usure de la poulie de renvoi de courroie d'accessoires ou galet tendeur.",
-            (
-                "Claquement à froid : Poussoirs hydrauliques ou tendeur de chaîne"
-                " de distribution fatigué."
-            ),
-            (
-                "Perte de puissance : Durite de suralimentation (intercooler)"
-                " micro-fissurée."
-            ),
-        ],
-        "procedure_diag": (
-            "1. Déposer le cache moteur supérieur.\n2. Inspecter l'alignement"
-            " de la courroie accessoires moteur tournant.\n3. Utiliser un"
-            " stéthoscope pour localiser le bruit sur les galets.\n4. Contrôler"
-            " visuellement les durites de suralimentation."
-        ),
-    },
-    "BMW": {
-        "specs_generales": (
-            "Capacité huile L6 : 6.5L (5W30 / 0W40). Couples serrage roues :"
-            " 120 Nm."
-        ),
-        "pannes_frequentes": [
-            "Bruit métallique arrière moteur : Chaîne de distribution détendue (patins usés).",
-            "Surchauffe intermittente : Thermostat piloté ou pompe à eau électrique.",
-        ],
-        "procedure_diag": (
-            "1. Interrogation des codes défauts OBD2.\n2. Contrôle du circuit"
-            " de refroidissement.\n3. Vérification de l'état de la"
-            " distribution."
-        ),
-    },
-}
-
-if st.button("Lancer l'analyse Autodata"):
+if st.button("Lancer l'analyse ciblée"):
   if modele_motorisation and probleme:
     st.markdown("---")
     st.markdown(
-        f"## 📊 Rapport Technique : {marque_choisie} ({modele_motorisation})"
+        f"## 📊 Rapport d'Analyse : {marque_choisie} ({modele_motorisation})"
     )
+    st.write(f"🔎 **Symptôme analysé :** *{probleme}*")
 
-    # Récupération des données
-    data = db_technique.get(
-        marque_choisie,
-        {
-            "specs_generales": (
-                "Consulter les données techniques constructeur spécifiques."
-            ),
-            "pannes_frequentes": [
-                "Vérification des faisceaux électriques et capteurs.",
-                "Contrôle de l'état des filtres et fluides.",
-            ],
-            "procedure_diag": (
-                "1. Passage à la valise diagnostic OBD2.\n2. Contrôle visuel"
-                " des éléments périphériques."
-            ),
-        },
-    )
+    # Analyse intelligente basée sur les mots-clés saisis par l'utilisateur
+    pb_lower = probleme.lower()
 
-    # Affichage en blocs stylés
-    st.markdown("#### ⚙️ Spécifications & Couples")
-    st.info(data["specs_generales"])
+    if "puissance" in pb_lower or "pêche" in pb_lower or "accélération" in pb_lower:
+      diagnostic_titre = "Problème de Puissance / Suralimentation"
+      causes = [
+          "Durite de suralimentation (intercooler) percée ou fendue (génère un sifflement et une mise en sécurité du turbo).",
+          "Vanne EGR encrassée ou bloquée en position ouverte.",
+          "Capteur de pression de suralimentation (MAP) encrassé par la suie.",
+          "Filtre à carburant colmaté (débit insuffisant en charge).",
+      ]
+      actions = (
+          "1. Inspecter minutieusement toutes les durites d'échangeur air/air"
+          " (traces d'huile visibles).\n2. Contrôler les codes défauts à la"
+          " valise (ex: pression de turbo trop basse).\n3. Nettoyer ou tester"
+          " le capteur de pression MAP sur le collecteur."
+      )
 
-    st.markdown("#### ⚠️ Pannes Connues (Database)")
-    for p in data["pannes_frequentes"]:
-      st.markdown(f"- {p}")
+    elif "bruit" in pb_lower or "claque" in pb_lower or "couine" in pb_lower:
+      diagnostic_titre = "Bruit / Anomalie Mécanique Périphérique"
+      causes = [
+          "Usure du galet tendeur ou de la poulie de renvoi de la courroie d'accessoires.",
+          "Jeu au niveau de la poulie debrayable d'alternateur.",
+          "Jeu ou usure des poussoirs hydrauliques / chaîne de distribution.",
+      ]
+      actions = (
+          "1. Déposer la courroie d'accessoires et vérifier l'état de chaque"
+          " galet à la main.\n2. Écouter le bloc moteur avec un stéthoscope"
+          " d'atelier.\n3. Vérifier la tension de la chaîne."
+      )
 
-    st.markdown("#### 🛠️ Procédure de Diagnostic")
-    st.code(data["procedure_diag"], language="markdown")
+    else:
+      diagnostic_titre = "Diagnostic Général / Panne Spécifique"
+      causes = [
+          "Anomalie de gestion électronique ou capteur défectueux.",
+          "Faux contact sur les faisceaux moteurs ou problème d'alimentation.",
+      ]
+      actions = (
+          "1. Brancher un outil de diagnostic OBD2 pour relever les codes"
+          " défauts précis.\n2. Contrôler l'état des fusibles et des masses"
+          " principales."
+      )
 
-    st.success("✅ Analyse terminée avec succès (Génération instantanée).")
+    # Affichage dynamique orienté vers le vrai problème
+    st.markdown(f"#### ⚙️ Cause Principale Identifiée : {diagnostic_titre}")
+    st.markdown("#### ⚠️ Pannes Probables à Vérifier :")
+    for c in causes:
+      st.markdown(f"- {c}")
+
+    st.markdown("#### 🛠️ Procédure de Résolution Recommandée :")
+    st.code(actions, language="markdown")
+
+    st.success("✅ Analyse effectuée en fonction de votre description.")
   else:
     st.warning("⚠️ Merci de remplir le modèle et de décrire le problème.")
