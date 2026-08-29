@@ -209,7 +209,7 @@ def sauvegarder_avis(liste_avis):
   with open(REVIEWS_FILE, "w", encoding="utf-8") as f:
     json.dump(liste_avis, f, ensure_ascii=False, indent=4)
 
-# CSS global placé APRÈS les imports
+# --- DESIGN ULTRA CLEAN & SAAS (Fond Mercedes inchangé) ---
 st.markdown(
     """
     <style>
@@ -223,35 +223,57 @@ st.markdown(
         background-attachment: fixed;
     }
     
-    /* Texte en blanc sauf le "Pro" en rouge */
+    /* Textes en blanc pur */
     .stApp, div[data-testid="stMarkdownContainer"] p, div[data-testid="stMarkdownContainer"] li, label {
         color: #ffffff !important;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
 
+    /* Boutons ultra-stylés effet néon/pro */
     div.stButton > button {
         width: 100% !important;
         display: block !important;
-        background: linear-gradient(135deg, #ff4b4b 0%, #e03131 100%);
+        background: linear-gradient(135deg, #ff3333 0%, #b30000 100%);
         color: white;
-        font-weight: bold;
-        border-radius: 16px;
-        padding: 0.7rem;
-        border: none;
-        box-shadow: 0 4px 15px rgba(255, 75, 75, 0.4);
-        transition: all 0.3s ease;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        border-radius: 12px;
+        padding: 0.8rem 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        box-shadow: 0 8px 25px rgba(255, 51, 51, 0.35);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         margin: 0 auto;
     }
     div.stButton > button:hover { 
-        background: linear-gradient(135deg, #ff2b2b 0%, #c92a2a 100%);
-        box-shadow: 0 6px 20px rgba(255, 43, 43, 0.6);
-        transform: translateY(-1px);
+        background: linear-gradient(135deg, #ff4d4d 0%, #cc0000 100%);
+        box-shadow: 0 12px 30px rgba(255, 51, 51, 0.55);
+        transform: translateY(-2px);
+        border-color: rgba(255, 255, 255, 0.3);
     }
 
+    /* Champs de saisie (inputs) futuristes et sombres semi-transparents */
     .stTextInput>div>div>input, .stSelectbox>div>div>div, .stTextArea>div>div>textarea {
-        background-color: rgba(15, 23, 42, 0.6);
-        border-radius: 14px;
-        border: 1px solid rgba(255, 255, 255, 0.12);
-        color: white;
+        background-color: rgba(13, 17, 30, 0.75) !important;
+        border-radius: 12px !important;
+        border: 1px solid rgba(255, 255, 255, 0.12) !important;
+        color: white !important;
+        box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+    }
+    .stTextInput>div>div>input:focus, .stTextArea>div>div>textarea:focus {
+        border-color: #ff3333 !important;
+        box-shadow: 0 0 10px rgba(255, 51, 51, 0.3) !important;
+    }
+
+    /* Expander et blocs d'historique look "Glassmorphism" */
+    .streamlit-expanderHeader {
+        background-color: rgba(20, 27, 45, 0.6) !important;
+        border-radius: 12px !important;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    
+    /* Séparateurs discrets */
+    hr {
+        border-color: rgba(255, 255, 255, 0.1);
     }
     </style>
 """,
