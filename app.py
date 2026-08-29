@@ -131,7 +131,13 @@ st.markdown(
     """
     <style>
     .stApp {
-        background: linear-gradient(135deg, #070913 0%, #131829 50%, #070913 100%);
+        background: 
+            linear-gradient(rgba(7, 9, 19, 0.88), rgba(19, 24, 41, 0.92)),
+            url("https://images.unsplash.com/photo-1617814076367-b759c7d7e738?auto=format&fit=crop&w=1200&q=80");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
     }
     
     div.stButton > button {
@@ -154,9 +160,10 @@ st.markdown(
     }
 
     .stTextInput>div>div>input, .stSelectbox>div>div>div {
-        background-color: rgba(255, 255, 255, 0.04);
+        background-color: rgba(15, 23, 42, 0.6);
         border-radius: 14px;
-        border: 1px solid rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        color: white;
     }
     </style>
 """,
@@ -166,21 +173,6 @@ st.markdown(
 # Titre de l'app
 st.markdown(
     "# 🔧 Rtv.ai <span style='color:#ff4b4b;'>Pro</span>", unsafe_allow_html=True
-)
-
-# Croquis simple et clean d'une berline générique
-st.markdown(
-    """
-    <div style="text-align: center; margin-bottom: 20px;">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 150" width="100%" style="opacity: 0.2; max-width: 350px;">
-            <path fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M40,110 Q80,110 130,95 Q200,75 280,75 Q360,75 410,95 Q450,110 470,110 L40,110 Z"/>
-            <path fill="none" stroke="#ffffff" stroke-width="1.5" d="M150,93 Q210,65 270,65 Q330,65 370,93"/>
-            <circle cx="140" cy="110" r="22" fill="none" stroke="#ffffff" stroke-width="1.5"/>
-            <circle cx="370" cy="110" r="22" fill="none" stroke="#ffffff" stroke-width="1.5"/>
-        </svg>
-    </div>
-    """,
-    unsafe_allow_html=True,
 )
 
 api_key = None
@@ -224,7 +216,7 @@ if st.button(t["btn"]):
 
         1. Coupable numéro 1 (La pièce précise en 1 ligne).
         2. Test rapide (Comment vérifier en 1 minute).
-        3. Serrage / Référence (Si applicable).
+        3. Serrage / Référence (If applicable).
         """
 
         response = model.generate_content(prompt)
