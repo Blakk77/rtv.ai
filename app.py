@@ -19,8 +19,7 @@ LANGS = {
         "warn": "⚠️ Remplis tous les champs.",
         "res": "Résultat",
         "history": "📜 Historique des diagnostics",
-        "copy_btn": "📋 Copier le diagnostic",
-        "copy_success": "Copié dans le presse-papier !",
+        "copy_label": "📋 Texte brut pour copie rapide :",
         "lang_label": "🌍 Choisir la langue",
     },
     "English": {
@@ -37,8 +36,7 @@ LANGS = {
         "warn": "⚠️ Please fill in all fields.",
         "res": "Result",
         "history": "📜 Diagnosis History",
-        "copy_btn": "📋 Copy Diagnosis",
-        "copy_success": "Copied to clipboard!",
+        "copy_label": "📋 Raw text for easy copying:",
         "lang_label": "🌍 Choose Language",
     },
     "Русский": {
@@ -55,8 +53,7 @@ LANGS = {
         "warn": "⚠️ Заполните все поля.",
         "res": "Результат",
         "history": "📜 История диагностик",
-        "copy_btn": "📋 Копировать диагноз",
-        "copy_success": "Скопировано в буфер обмена!",
+        "copy_label": "📋 Текст для быстрого копирования:",
         "lang_label": "🌍 Выбрать язык",
     },
     "Македонски": {
@@ -73,8 +70,7 @@ LANGS = {
         "warn": "⚠️ Пополнете ги сите полиња.",
         "res": "Резултат",
         "history": "📜 Историја на дијагностика",
-        "copy_btn": "📋 Копирај дијагностика",
-        "copy_success": "Копирано!",
+        "copy_label": "📋 Текст за брзо копирање:",
         "lang_label": "🌍 Избери јазик",
     },
     "Српски / Srpski": {
@@ -91,8 +87,7 @@ LANGS = {
         "warn": "⚠️ Popunite sva polja.",
         "res": "Rezultat",
         "history": "📜 Istorija dijagnostike",
-        "copy_btn": "📋 Kopiraj dijagnozu",
-        "copy_success": "Kopirano u memoriju!",
+        "copy_label": "📋 Tekst za lako kopiranje:",
         "lang_label": "🌍 Izaberi jezik",
     },
     "Hrvatski": {
@@ -109,8 +104,7 @@ LANGS = {
         "warn": "⚠️ Ispunite sva polja.",
         "res": "Rezultat",
         "history": "📜 Povijest dijagnostike",
-        "copy_btn": "📋 Kopiraj dijagnozu",
-        "copy_success": "Kopirano u međuspremnik!",
+        "copy_label": "📋 Tekst za jednostavno kopiranje:",
         "lang_label": "🌍 Odaberi jezik",
     },
     "Español": {
@@ -127,8 +121,7 @@ LANGS = {
         "warn": "⚠️ Rellena todos los campos.",
         "res": "Resultado",
         "history": "📜 Historial de diagnósticos",
-        "copy_btn": "📋 Copiar diagnóstico",
-        "copy_success": "¡Copiado al portapapeles!",
+        "copy_label": "📋 Texto para copia rápida:",
         "lang_label": "🌍 Elegir idioma",
     },
     "Deutsch": {
@@ -145,8 +138,7 @@ LANGS = {
         "warn": "⚠️ Bitte alle Felder ausfüllen.",
         "res": "Ergebnis",
         "history": "📜 Diagnoseverlauf",
-        "copy_btn": "📋 Diagnose kopieren",
-        "copy_success": "In die Zwischenablage kopiert!",
+        "copy_label": "📋 Text zum schnellen Kopieren:",
         "lang_label": "🌍 Sprache wählen",
     },
 }
@@ -249,7 +241,6 @@ if st.button(t["btn"]):
         response = model.generate_content(prompt)
         resultat_texte = response.text
 
-        # Enregistrement dans l'historique de session
         entree_historique = {
             "vehicule": f"{marque_choisie} {modele}",
             "symptome": probleme,
@@ -262,17 +253,18 @@ if st.button(t["btn"]):
   else:
     st.warning(t["warn"])
 
-# Affichage du dernier résultat ou des diags en cours s'il y en a
+# Affichage du dernier diagnostic en cours
 if st.session_state["historique"]:
   dernier = st.session_state["historique"][0]
   st.markdown("---")
   st.markdown(f"### 📊 {t['res']} : {dernier['vehicule']} - {dernier['symptome']}")
   st.markdown(dernier["resultat"])
 
-  # Bouton de copie rapide via code HTML/JS transparent ou composant natif
+  # Le bouton de copie rapide avec un titre clair au-dessus
+  st.markdown(f"<br><small>{t['copy_label']}</small>", unsafe_allow_html=True)
   st.code(dernier["resultat"], language="markdown")
 
-# Affichage de l'historique dans un expander discret
+# Historique dans un expander en bas
 if len(st.session_state["historique"]) > 0:
   with st.expander(t["history"]):
     for idx, item in enumerate(st.session_state["historique"]):
