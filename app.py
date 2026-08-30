@@ -14,6 +14,9 @@ st.set_page_config(page_title="Rtv.ai Pro", page_icon="🔧", layout="centered")
 DUREE_ATTENTE = 60  # 60 secondes de cooldown
 PSEUDO_ADMIN = "Meca91"  # Ton pseudo pour ne JAMAIS attendre
 REVIEWS_FILE = "avis.json"
+PAYPAL_URL = (  # Remplace par ton vrai lien PayPal.Me
+    "https://paypal.me/Meca91"
+)
 
 # --- DICTIONNAIRE MULTILINGUE COMPLET ---
 LANGS = {
@@ -40,6 +43,9 @@ LANGS = {
         "already_voted": "✅ You have already posted a review!",
         "wait_msg": "⏳ Server cooling down. Please wait **{time} sec** before the next diagnosis.",
         "ai_lang": "English",
+        "donate_title": "☕ Support the Project",
+        "donate_desc": "A diagnostic saved you money? Buy a coffee or support the dev!",
+        "donate_btn": "💙 Donate (PayPal)",
     },
     "Français": {
         "title": "Rtv.ai Pro - Assistant Mécanique IA",
@@ -61,9 +67,14 @@ LANGS = {
         "comment_ph": "Ton avis sur l'application...",
         "rate_btn": "Envoyer mon avis",
         "rate_thanks": "🙏 Merci pour ton retour !",
-        "already_voted": "✅ Tu as déjà posté un avis !",
+        "already_voted": "✅ Tu auras déjà posté un avis !",
         "wait_msg": "⏳ Serveur en pause. Patiente **{time} sec** avant le prochain diag.",
         "ai_lang": "French",
+        "donate_title": "☕ Soutenir le projet",
+        "donate_desc": (
+            "Un diag t'a évité une facture ? Offre un café ou soutiens le dev !"
+        ),
+        "donate_btn": "💙 Faire un don (PayPal)",
     },
     "Deutsch": {
         "title": "Rtv.ai Pro - KI-Mechanik-Assistent",
@@ -88,6 +99,11 @@ LANGS = {
         "already_voted": "✅ Sie haben bereits eine Bewertung abgegeben!",
         "wait_msg": "⏳ Server macht Pause. Bitte warten Sie **{time} Sek.** vor der nächsten Diagnose.",
         "ai_lang": "German",
+        "donate_title": "☕ Projekt unterstützen",
+        "donate_desc": (
+            "Eine Diagnose hat geholfen? Spendieren Sie einen Kaffee!"
+        ),
+        "donate_btn": "💙 Spenden (PayPal)",
     },
     "Македонски": {
         "title": "Rtv.ai Pro - AI Механички асистент",
@@ -112,6 +128,9 @@ LANGS = {
         "already_voted": "✅ Веќе објавивте рецензија!",
         "wait_msg": "⏳ Серверот е во пауза. Почекајте **{time} сек** пред следната дијагноза.",
         "ai_lang": "Macedonian",
+        "donate_title": "☕ Поддржете го проектот",
+        "donate_desc": "Ви помогна дијагностиката? Поддржете го развојот!",
+        "donate_btn": "💙 Донирај (PayPal)",
     },
     "Српски": {
         "title": "Rtv.ai Pro - AI Механички асистент",
@@ -136,6 +155,9 @@ LANGS = {
         "already_voted": "✅ Већ сте објавили рецензију!",
         "wait_msg": "⏳ Сервер је у паузи. Сачекајте **{time} сек** пре следеће дијагнозе.",
         "ai_lang": "Serbian",
+        "donate_title": "☕ Подржите пројекат",
+        "donate_desc": "Дијагностика вам је помогла? Подржите развој!",
+        "donate_btn": "💙 Донирај (PayPal)",
     },
     "Hrvatski": {
         "title": "Rtv.ai Pro - AI Mehanički pomoćnik",
@@ -160,6 +182,9 @@ LANGS = {
         "already_voted": "✅ Već ste objavili recenziju!",
         "wait_msg": "⏳ Poslužitelj je u pauzi. Pričekajte **{time} sek** prije sljedeće dijagnoze.",
         "ai_lang": "Croatian",
+        "donate_title": "☕ Podržite projekt",
+        "donate_desc": "Dijagnoza je pomogla? Podržite daljnji rad!",
+        "donate_btn": "💙 Donirajte (PayPal)",
     },
     "Русский": {
         "title": "Rtv.ai Pro - ИИ Механический помощник",
@@ -184,6 +209,9 @@ LANGS = {
         "already_voted": "✅ Вы уже оставили отзыв!",
         "wait_msg": "⏳ Сервер отдыхает. Подождите **{time} сек** перед следующей диагностикой.",
         "ai_lang": "Russian",
+        "donate_title": "☕ Поддержать проект",
+        "donate_desc": "Диагностика помогла? Угостите кофе или поддержите автора!",
+        "donate_btn": "💙 Поддержать (PayPal)",
     },
     "Türkçe": {
         "title": "Rtv.ai Pro - Yapay Zeka Mekanik Asistanı",
@@ -208,6 +236,9 @@ LANGS = {
         "already_voted": "✅ Zaten bir yorum gönderdiniz!",
         "wait_msg": "⏳ Sunucu beklemede. Lütfen sonraki teşhisten önce **{time} sn** bekleyin.",
         "ai_lang": "Turkish",
+        "donate_title": "☕ Projeyi Destekle",
+        "donate_desc": "Teşhis işine yaradı mı? Bir kahve ısmarla veya destek ol!",
+        "donate_btn": "💙 Bağış Yap (PayPal)",
     },
 }
 
@@ -232,6 +263,30 @@ t = LANGS[selected_lang]
 
 # Gestion de l'authentification dans la barre latérale ou en haut
 est_connecte = afficher_interface_auth(t)
+
+# --- SECTION DON PAYPAL DANS LA SIDEBAR ---
+st.sidebar.markdown("---")
+st.sidebar.markdown(f"### {t['donate_title']}")
+st.sidebar.markdown(t["donate_desc"])
+st.sidebar.markdown(
+    f"""
+    <a href="{PAYPAL_URL}" target="_blank" style="text-decoration: none;">
+        <div style="
+            background: linear-gradient(90deg, #0079C1 0%, #00457C 100%);
+            color: white !important;
+            padding: 10px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: bold;
+            border: 1px solid #3399CC;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        ">
+            {t['donate_btn']}
+        </div>
+    </a>
+""",
+    unsafe_allow_html=True,
+)
 
 
 # --- FONCTIONS AVIS ---
