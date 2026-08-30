@@ -107,7 +107,7 @@ t = translations[st.session_state.lang]
 st.title(t["title"])
 st.caption(t["sub"])
 
-user_input = st.text_input(t["input_label"], placeholder=t["placeholder"], key="user_problem_input")
+if st.button(t["btn_analyze"], key="btn_analyze_submit"):
 if st.button(t["btn_analyze"]):
     st.subheader(t["result_header"])
     # Ton code de traitement / API ici
