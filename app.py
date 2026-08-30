@@ -39,7 +39,7 @@ LANGS = {
         "rate_thanks": "🙏 Thank you for your feedback!",
         "already_voted": "✅ You have already posted a review!",
         "wait_msg": "⏳ Server cooling down. Please wait **{time} sec** before the next diagnosis.",
-        "ai_lang": "English"
+        "ai_lang": "English",
     },
     "Français": {
         "title": "Rtv.ai Pro - Assistant Mécanique IA",
@@ -63,7 +63,7 @@ LANGS = {
         "rate_thanks": "🙏 Merci pour ton retour !",
         "already_voted": "✅ Tu as déjà posté un avis !",
         "wait_msg": "⏳ Serveur en pause. Patiente **{time} sec** avant le prochain diag.",
-        "ai_lang": "French"
+        "ai_lang": "French",
     },
     "Deutsch": {
         "title": "Rtv.ai Pro - KI-Mechanik-Assistent",
@@ -87,7 +87,7 @@ LANGS = {
         "rate_thanks": "🙏 Vielen Dank für Ihr Feedback!",
         "already_voted": "✅ Sie haben bereits eine Bewertung abgegeben!",
         "wait_msg": "⏳ Server macht Pause. Bitte warten Sie **{time} Sek.** vor der nächsten Diagnose.",
-        "ai_lang": "German"
+        "ai_lang": "German",
     },
     "Македонски": {
         "title": "Rtv.ai Pro - AI Механички асистент",
@@ -111,7 +111,7 @@ LANGS = {
         "rate_thanks": "🙏 Ви благодариме за повратните информации!",
         "already_voted": "✅ Веќе објавивте рецензија!",
         "wait_msg": "⏳ Серверот е во пауза. Почекајте **{time} сек** пред следната дијагноза.",
-        "ai_lang": "Macedonian"
+        "ai_lang": "Macedonian",
     },
     "Српски": {
         "title": "Rtv.ai Pro - AI Механички асистент",
@@ -135,7 +135,7 @@ LANGS = {
         "rate_thanks": "🙏 Хвала вам на повратним информацијама!",
         "already_voted": "✅ Већ сте објавили рецензију!",
         "wait_msg": "⏳ Сервер је у паузи. Сачекајте **{time} сек** пре следеће дијагнозе.",
-        "ai_lang": "Serbian"
+        "ai_lang": "Serbian",
     },
     "Hrvatski": {
         "title": "Rtv.ai Pro - AI Mehanički pomoćnik",
@@ -159,7 +159,7 @@ LANGS = {
         "rate_thanks": "🙏 Hvala vam na povratnim informacijama!",
         "already_voted": "✅ Već ste objavili recenziju!",
         "wait_msg": "⏳ Poslužitelj je u pauzi. Pričekajte **{time} sek** prije sljedeće dijagnoze.",
-        "ai_lang": "Croatian"
+        "ai_lang": "Croatian",
     },
     "Русский": {
         "title": "Rtv.ai Pro - ИИ Механический помощник",
@@ -183,7 +183,7 @@ LANGS = {
         "rate_thanks": "🙏 Спасибо за ваш отзыв!",
         "already_voted": "✅ Вы уже оставили отзыв!",
         "wait_msg": "⏳ Сервер отдыхает. Подождите **{time} сек** перед следующей диагностикой.",
-        "ai_lang": "Russian"
+        "ai_lang": "Russian",
     },
     "Türkçe": {
         "title": "Rtv.ai Pro - Yapay Zeka Mekanik Asistanı",
@@ -207,15 +207,24 @@ LANGS = {
         "rate_thanks": "🙏 Geri bildiriminiz için teşekkürler!",
         "already_voted": "✅ Zaten bir yorum gönderdiniz!",
         "wait_msg": "⏳ Sunucu beklemede. Lütfen sonraki teşhisten önce **{time} sn** bekleyin.",
-        "ai_lang": "Turkish"
-    }
+        "ai_lang": "Turkish",
+    },
 }
 
 # --- MENU DÉROULANT SÉLECTION DE LANGUE ---
 selected_lang = st.selectbox(
     "🌐 Language / Langue",
-    ["English", "Français", "Deutsch", "Македонски", "Српски", "Hrvatski", "Русский", "Türkçe"],
-    key="global_lang_selector"
+    [
+        "English",
+        "Français",
+        "Deutsch",
+        "Македонски",
+        "Српски",
+        "Hrvatski",
+        "Русский",
+        "Türkçe",
+    ],
+    key="global_lang_selector",
 )
 
 # Chargement du dictionnaire actif
@@ -224,29 +233,42 @@ t = LANGS[selected_lang]
 # Gestion de l'authentification dans la barre latérale ou en haut
 est_connecte = afficher_interface_auth(t)
 
+
 # --- FONCTIONS AVIS ---
 def charger_avis():
     if os.path.exists(REVIEWS_FILE):
         try:
             with open(REVIEWS_FILE, "r", encoding="utf-8") as f:
                 return json.load(f)
-        except:
+        except Exception:
             return []
     return []
+
 
 def sauvegarder_avis(liste_avis):
     with open(REVIEWS_FILE, "w", encoding="utf-8") as f:
         json.dump(liste_avis, f, ensure_ascii=False, indent=4)
 
-# --- CSS STYLISÉ ---
+
+# --- CSS STYLISÉ AVEC TRANSPARENCE AMÉLIORÉE POUR L'IMAGE DE FOND ---
 st.markdown(
     """
     <style>
+    /* Fond global avec overlay très léger pour voir l'image */
     .stApp {
-        background: linear-gradient(rgba(7, 9, 19, 0.88), rgba(19, 24, 41, 0.92)),
-                    url("https://images.unsplash.com/photo-1617814076367-b759c7d7e738?auto=format&fit=crop&w=1200&q=80");
-        background-size: cover; background-attachment: fixed;
+        background: linear-gradient(rgba(10, 12, 20, 0.45), rgba(10, 12, 20, 0.55)),
+                    url("https://images.unsplash.com/photo-1617814076367-b759c7d7e738?auto=format&fit=crop&w=1920&q=80");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
     }
+    
+    /* On rend la barre latérale et les conteneurs transparents pour voir la voiture partout */
+    [data-testid="stSidebar"] {
+        background-color: rgba(15, 17, 26, 0.7) !important;
+    }
+
     h1, h2, h3, p, label, div { color: #ffffff !important; }
     .titre-pro { color: #ff2a2a !important; text-shadow: 0 0 10px rgba(255, 42, 42, 0.5); }
     
@@ -256,9 +278,10 @@ st.markdown(
         border-radius: 12px !important; font-weight: 800 !important;
         padding: 0.8rem !important; width: 100% !important;
     }
+    
     [data-baseweb="input"], [data-baseweb="select"], [data-baseweb="textarea"] {
-        background-color: rgba(0, 0, 0, 0.75) !important;
-        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        background-color: rgba(0, 0, 0, 0.6) !important;
+        border: 1px solid rgba(255, 255, 255, 0.25) !important;
         border-radius: 10px !important;
     }
     </style>
@@ -289,12 +312,16 @@ with col1:
     marque_choisie = st.selectbox(
         t["marque"],
         ["Mercedes-Benz", "BMW", "Audi", "Volkswagen", "Renault", "Peugeot"],
-        key="select_brand"
+        key="select_brand",
     )
 with col2:
-    modele = st.text_input(t["modele"], placeholder=t["modele_ph"], key="input_modele")
+    modele = st.text_input(
+        t["modele"], placeholder=t["modele_ph"], key="input_modele"
+    )
 
-probleme = st.text_input(t["probleme"], placeholder=t["probleme_ph"], key="input_probleme")
+probleme = st.text_input(
+    t["probleme"], placeholder=t["probleme_ph"], key="input_probleme"
+)
 
 # --- GESTION DU MINUTEUR DE 60S ---
 utilisateur_actuel = st.session_state.get("utilisateur", "")
@@ -374,12 +401,16 @@ else:
             "Note",
             options=["⭐", "⭐⭐", "⭐⭐⭐", "⭐⭐⭐⭐", "⭐⭐⭐⭐⭐"],
             value="⭐⭐⭐⭐⭐",
-            key="slider_note"
+            key="slider_note",
         )
     with col_r2:
-        pseudo_in = st.text_input("Pseudo", placeholder=t["pseudo_ph"], key="input_pseudo_avis")
+        pseudo_in = st.text_input(
+            "Pseudo", placeholder=t["pseudo_ph"], key="input_pseudo_avis"
+        )
 
-    com_in = st.text_area("Avis", placeholder=t["comment_ph"], key="input_comment_avis")
+    com_in = st.text_area(
+        "Avis", placeholder=t["comment_ph"], key="input_comment_avis"
+    )
 
     if st.button(t["rate_btn"], key="btn_submit_avis"):
         if pseudo_in.strip() and com_in.strip():
