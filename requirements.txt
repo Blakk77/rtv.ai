@@ -1,2 +1,7 @@
 streamlit
 google-generativeai
+
+streamlit
+requests
+google-generativeai
+extra-streamlit-components
