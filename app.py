@@ -7,28 +7,13 @@ from google.api_core.exceptions import ResourceExhausted
 
 import streamlit as st
 
-# Initialisation de la langue (Anglais par défaut)
-if "lang" not in st.session_state:
-    st.session_state.lang = "English"
+# Menu déroulant de choix de langue directement sur la page
+selected_lang = st.selectbox(
+    "🌐 Choose language / Choisir la langue",
+    ["English", "Français", "Deutsch", "Македонски", "Српски", "Hrvatski", "Русский", "Türkçe"]
+)
 
-st.write("🌐 **Language / Langue :**")
-
-# Boutons de sélection rapide sur 4 colonnes
-col1, col2, col3, col4 = st.columns(4)
-with col1:
-    if st.button("🇬🇧 English"): st.session_state.lang = "English"
-    if st.button("🇷🇺 Русский"): st.session_state.lang = "Русский"
-with col2:
-    if st.button("🇫🇷 Français"): st.session_state.lang = "Français"
-    if st.button("🇹🇷 Türkçe"): st.session_state.lang = "Türkçe"
-with col3:
-    if st.button("🇩🇪 Deutsch"): st.session_state.lang = "Deutsch"
-    if st.button("🇭🇷 Hrvatski"): st.session_state.lang = "Hrvatski"
-with col4:
-    if st.button("🇲🇰 Македонски"): st.session_state.lang = "Македонски"
-    if st.button("🇷🇸 Српски"): st.session_state.lang = "Српски"
-
-# Dictionnaire complet des traductions
+# Dictionnaire de traductions
 translations = {
     "English": {
         "title": "Rtv.ai Pro - AI Mechanic Assistant",
@@ -103,6 +88,17 @@ translations = {
         "chat_placeholder": "Ek bir soru sorun...",
     }
 }
+
+# Récupération de la traduction
+t = translations[selected_lang]
+
+# Affichage avec les textes traduits
+st.title(t["title"])
+st.caption(t["sub"])
+
+user_input = st.text_input(t["input_label"], placeholder=t["placeholder"])
+if st.button(t["btn_analyze"]):
+    st.subheader(t["result_header"])
 
 # Variable contenant les textes dans la langue sélectionnée
 t = translations[st.session_state.lang]
