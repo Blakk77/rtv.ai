@@ -250,11 +250,10 @@ def sauvegarder_avis(liste_avis):
         json.dump(liste_avis, f, ensure_ascii=False, indent=4)
 
 
-# --- CSS STYLISÉ AVEC TRANSPARENCE AMÉLIORÉE POUR L'IMAGE DE FOND ---
+# --- CSS STYLISÉ (AVEC CORRECTIF POUR LES MENUS DÉROULANTS BLANCS) ---
 st.markdown(
     """
     <style>
-    /* Fond global avec overlay très léger pour voir l'image */
     .stApp {
         background: linear-gradient(rgba(10, 12, 20, 0.45), rgba(10, 12, 20, 0.55)),
                     url("https://images.unsplash.com/photo-1617814076367-b759c7d7e738?auto=format&fit=crop&w=1920&q=80");
@@ -264,7 +263,6 @@ st.markdown(
         background-attachment: fixed;
     }
     
-    /* On rend la barre latérale et les conteneurs transparents pour voir la voiture partout */
     [data-testid="stSidebar"] {
         background-color: rgba(15, 17, 26, 0.7) !important;
     }
@@ -283,6 +281,20 @@ st.markdown(
         background-color: rgba(0, 0, 0, 0.6) !important;
         border: 1px solid rgba(255, 255, 255, 0.25) !important;
         border-radius: 10px !important;
+    }
+
+    /* CORRECTIF POUR LES MENUS DÉROULANTS (POPOVER) EN MODE SOMBRE */
+    [data-baseweb="popover"], [data-baseweb="menu"], ul[role="listbox"] {
+        background-color: #12151f !important;
+        color: #ffffff !important;
+    }
+    li[role="option"] {
+        background-color: #12151f !important;
+        color: #ffffff !important;
+    }
+    li[role="option"]:hover {
+        background-color: #ff0000 !important;
+        color: #ffffff !important;
     }
     </style>
 """,
