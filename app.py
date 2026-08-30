@@ -7,48 +7,114 @@ from google.api_core.exceptions import ResourceExhausted
 
 import streamlit as st
 
-# Dictionnaire des traductions pour chaque langue
+# Initialisation de la langue (Anglais par défaut)
+if "lang" not in st.session_state:
+    st.session_state.lang = "English"
+
+st.write("🌐 **Language / Langue :**")
+
+# Boutons de sélection rapide sur 4 colonnes
+col1, col2, col3, col4 = st.columns(4)
+with col1:
+    if st.button("🇬🇧 English"): st.session_state.lang = "English"
+    if st.button("🇷🇺 Русский"): st.session_state.lang = "Русский"
+with col2:
+    if st.button("🇫🇷 Français"): st.session_state.lang = "Français"
+    if st.button("🇹🇷 Türkçe"): st.session_state.lang = "Türkçe"
+with col3:
+    if st.button("🇩🇪 Deutsch"): st.session_state.lang = "Deutsch"
+    if st.button("🇭🇷 Hrvatski"): st.session_state.lang = "Hrvatski"
+with col4:
+    if st.button("🇲🇰 Македонски"): st.session_state.lang = "Македонски"
+    if st.button("🇷🇸 Српски"): st.session_state.lang = "Српски"
+
+# Dictionnaire complet des traductions
 translations = {
     "English": {
-        "title": "Rtv.ai Pro - Mechanic Assistant",
-        "select_lang": "Select language",
+        "title": "Rtv.ai Pro - AI Mechanic Assistant",
+        "sub": "Diagnose mechanics and auto repairs in seconds.",
+        "input_label": "Describe your issue or enter an error code:",
+        "placeholder": "Ex: Noise when braking, error code P0300...",
+        "btn_analyze": "Analyze",
+        "result_header": "Diagnosis & Solutions",
+        "chat_placeholder": "Ask a follow-up question...",
     },
     "Français": {
-        "title": "Rtv.ai Pro - Assistant Mécanique",
-        "select_lang": "Choisir la langue",
+        "title": "Rtv.ai Pro - Assistant Mécanique IA",
+        "sub": "Diagnostiquez vos pannes mécaniques en quelques secondes.",
+        "input_label": "Décrivez votre problème ou entrez un code défaut :",
+        "placeholder": "Ex : Bruit au freinage, code P0300...",
+        "btn_analyze": "Analyser",
+        "result_header": "Diagnostic & Solutions",
+        "chat_placeholder": "Posez une question complémentaire...",
     },
     "Deutsch": {
-        "title": "Rtv.ai Pro - Mechanik-Assistent",
-        "select_lang": "Sprache auswählen",
+        "title": "Rtv.ai Pro - KI-Mechanik-Assistent",
+        "sub": "Diagnostizieren Sie Fahrzeugprobleme in Sekundenschnelle.",
+        "input_label": "Beschreiben Sie das Problem oder geben Sie einen Fehlercode ein:",
+        "placeholder": "Z.B. Geräusche beim Bremsen, Fehlercode P0300...",
+        "btn_analyze": "Analysieren",
+        "result_header": "Diagnose & Lösungen",
+        "chat_placeholder": "Stellen Sie eine weitere Frage...",
     },
     "Македонски": {
-        "title": "Rtv.ai Pro - Механички асистент",
-        "select_lang": "Изберете јазик",
+        "title": "Rtv.ai Pro - AI Механички асистент",
+        "sub": "Дијагностицирајте ги дефектите на возилото за неколку секунди.",
+        "input_label": "Опишете го проблемот или внесете код за грешка:",
+        "placeholder": "Нпр: Врева при кочење, код P0300...",
+        "btn_analyze": "Анализирај",
+        "result_header": "Дијагноза и решенија",
+        "chat_placeholder": "Постави дополнително прашање...",
     },
     "Српски": {
-        "title": "Rtv.ai Pro - Механички асистент",
-        "select_lang": "Изаберите језик",
+        "title": "Rtv.ai Pro - AI Механички асистент",
+        "sub": "Дијагностикујте кварове на возилу у неколико секунди.",
+        "input_label": "Опишите ваш проблем или унесите код грешке:",
+        "placeholder": "Нпр: Бука при кочењу, код P0300...",
+        "btn_analyze": "Анализирај",
+        "result_header": "Дијагноза и решења",
+        "chat_placeholder": "Поставите додатно питање...",
     },
     "Hrvatski": {
-        "title": "Rtv.ai Pro - Mehanički pomoćnik",
-        "select_lang": "Odaberi jezik",
+        "title": "Rtv.ai Pro - AI Mehanički pomoćnik",
+        "sub": "Dijagnosticirajte kvarove na vozilu u nekoliko sekundi.",
+        "input_label": "Opišite svoj problem ili unesite kod pogreške:",
+        "placeholder": "Npr: Buka pri kočenju, kod P0300...",
+        "btn_analyze": "Analiziraj",
+        "result_header": "Dijagnoza i rješenja",
+        "chat_placeholder": "Postavite dodatno pitanje...",
     },
     "Русский": {
-        "title": "Rtv.ai Pro - Механический помощник",
-        "select_lang": "Выберите язык",
+        "title": "Rtv.ai Pro - ИИ Механический помощник",
+        "sub": "Быстрая диагностика автомобильных неисправностей.",
+        "input_label": "Опишите проблему или введите код ошибки:",
+        "placeholder": "Напр: Шум при торможении, код P0300...",
+        "btn_analyze": "Анализировать",
+        "result_header": "Диагностика и решения",
+        "chat_placeholder": "Задайте дополнительный вопрос...",
     },
     "Türkçe": {
-        "title": "Rtv.ai Pro - Mekanik Asistanı",
-        "select_lang": "Dil seçin",
+        "title": "Rtv.ai Pro - Yapay Zeka Mekanik Asistanı",
+        "sub": "Araç arızalarını saniyeler içinde teşhis edin.",
+        "input_label": "Sorununuzu tanımlayın veya bir hata kodu girin:",
+        "placeholder": "Örn: Fren yaparken ses, P0300 kodu...",
+        "btn_analyze": "Analiz Et",
+        "result_header": "Teşhis ve Çözümler",
+        "chat_placeholder": "Ek bir soru sorun...",
     }
 }
 
-# Sélecteur de langue dans la barre latérale (Anglais en premier par défaut)
-lang_options = ["English", "Français", "Deutsch", "Македонски", "Српски", "Hrvatski", "Русский", "Türkçe"]
-selected_lang = st.sidebar.selectbox("Language / Langue", lang_options)
+# Variable contenant les textes dans la langue sélectionnée
+t = translations[st.session_state.lang]
 
-# Récupération des textes selon la langue choisie
-t = translations[selected_lang]
+# Affichage des éléments
+st.title(t["title"])
+st.caption(t["sub"])
+
+user_input = st.text_input(t["input_label"], placeholder=t["placeholder"])
+if st.button(t["btn_analyze"]):
+    st.subheader(t["result_header"])
+    # Ton code de traitement / API ici
 
 # Exemple d'utilisation dans l'application
 st.title(t["title"])
