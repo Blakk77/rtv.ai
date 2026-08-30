@@ -5,128 +5,43 @@ import google.generativeai as genai
 import streamlit as st
 from google.api_core.exceptions import ResourceExhausted
 
-import streamlit as st
-
-# Menu déroulant de choix de langue directement sur la page
-selected_lang = st.selectbox(
-    "🌐 Choose language / Choisir la langue",
-    ["English", "Français", "Deutsch", "Македонски", "Српски", "Hrvatski", "Русский", "Türkçe"]
-)
-
-# Dictionnaire de traductions
-translations = {
-    "English": {
-        "title": "Rtv.ai Pro - AI Mechanic Assistant",
-        "sub": "Diagnose mechanics and auto repairs in seconds.",
-        "input_label": "Describe your issue or enter an error code:",
-        "placeholder": "Ex: Noise when braking, error code P0300...",
-        "btn_analyze": "Analyze",
-        "result_header": "Diagnosis & Solutions",
-        "chat_placeholder": "Ask a follow-up question...",
-    },
-    "Français": {
-        "title": "Rtv.ai Pro - Assistant Mécanique IA",
-        "sub": "Diagnostiquez vos pannes mécaniques en quelques secondes.",
-        "input_label": "Décrivez votre problème ou entrez un code défaut :",
-        "placeholder": "Ex : Bruit au freinage, code P0300...",
-        "btn_analyze": "Analyser",
-        "result_header": "Diagnostic & Solutions",
-        "chat_placeholder": "Posez une question complémentaire...",
-    },
-    "Deutsch": {
-        "title": "Rtv.ai Pro - KI-Mechanik-Assistent",
-        "sub": "Diagnostizieren Sie Fahrzeugprobleme in Sekundenschnelle.",
-        "input_label": "Beschreiben Sie das Problem oder geben Sie einen Fehlercode ein:",
-        "placeholder": "Z.B. Geräusche beim Bremsen, Fehlercode P0300...",
-        "btn_analyze": "Analysieren",
-        "result_header": "Diagnose & Lösungen",
-        "chat_placeholder": "Stellen Sie eine weitere Frage...",
-    },
-    "Македонски": {
-        "title": "Rtv.ai Pro - AI Механички асистент",
-        "sub": "Дијагностицирајте ги дефектите на возилото за неколку секунди.",
-        "input_label": "Опишете го проблемот или внесете код за грешка:",
-        "placeholder": "Нпр: Врева при кочење, код P0300...",
-        "btn_analyze": "Анализирај",
-        "result_header": "Дијагноза и решенија",
-        "chat_placeholder": "Постави дополнително прашање...",
-    },
-    "Српски": {
-        "title": "Rtv.ai Pro - AI Механички асистент",
-        "sub": "Дијагностикујте кварове на возилу у неколико секунди.",
-        "input_label": "Опишите ваш проблем или унесите код грешке:",
-        "placeholder": "Нпр: Бука при кочењу, код P0300...",
-        "btn_analyze": "Анализирај",
-        "result_header": "Дијагноза и решења",
-        "chat_placeholder": "Поставите додатно питање...",
-    },
-    "Hrvatski": {
-        "title": "Rtv.ai Pro - AI Mehanički pomoćnik",
-        "sub": "Dijagnosticirajte kvarove na vozilu u nekoliko sekundi.",
-        "input_label": "Opišite svoj problem ili unesite kod pogreške:",
-        "placeholder": "Npr: Buka pri kočenju, kod P0300...",
-        "btn_analyze": "Analiziraj",
-        "result_header": "Dijagnoza i rješenja",
-        "chat_placeholder": "Postavite dodatno pitanje...",
-    },
-    "Русский": {
-        "title": "Rtv.ai Pro - ИИ Механический помощник",
-        "sub": "Быстрая диагностика автомобильных неисправностей.",
-        "input_label": "Опишите проблему или введите код ошибки:",
-        "placeholder": "Напр: Шум при торможении, код P0300...",
-        "btn_analyze": "Анализировать",
-        "result_header": "Диагностика и решения",
-        "chat_placeholder": "Задайте дополнительный вопрос...",
-    },
-    "Türkçe": {
-        "title": "Rtv.ai Pro - Yapay Zeka Mekanik Asistanı",
-        "sub": "Araç arızalarını saniyeler içinde teşhis edin.",
-        "input_label": "Sorununuzu tanımlayın veya bir hata kodu girin:",
-        "placeholder": "Örn: Fren yaparken ses, P0300 kodu...",
-        "btn_analyze": "Analiz Et",
-        "result_header": "Teşhis ve Çözümler",
-        "chat_placeholder": "Ek bir soru sorun...",
-    }
-}
-
-# Récupération de la traduction
-t = translations[selected_lang]
-
-# Affichage avec les textes traduits
-st.title(t["title"])
-st.caption(t["sub"])
-
-user_input = st.text_input(t["input_label"], placeholder=t["placeholder"])
-if st.button(t["btn_analyze"]):
-    st.subheader(t["result_header"])
-
-# Variable contenant les textes dans la langue sélectionnée
-t = translations[st.session_state.lang]
-
-# Affichage des éléments
-st.title(t["title"])
-st.caption(t["sub"])
-
-user_input = st.text_input(t["input_label"], placeholder=t["placeholder"], key="user_problem_input")
-
-if st.button(t["btn_analyze"], key="btn_analyze_submit"):
-    # Attention aux 4 espaces devant la ligne ci-dessous :
-    st.subheader(t["result_header"])
-    # Met ton code de réponse / analyse ici (lui aussi décalé)
-
-# Exemple d'utilisation dans l'application
-st.title(t["title"])
-
+# 1. Configuration de la page (RÈGLE STREAMLIT : toujours en premier)
 st.set_page_config(page_title="Rtv.ai Pro", page_icon="🔧", layout="centered")
-
 
 # --- PARAMÈTRES ET SÉCURITÉ ---
 DUREE_ATTENTE = 60  # 60 secondes de cooldown
 PSEUDO_ADMIN = "Meca91"  # Ton pseudo pour ne JAMAIS attendre
 REVIEWS_FILE = "avis.json"
 
+# --- DICTIONNAIRE MULTILINGUE COMPLET ---
 LANGS = {
+    "English": {
+        "title": "Rtv.ai Pro - AI Mechanic Assistant",
+        "sub": "Diagnose mechanics and auto repairs in seconds.",
+        "marque": "Brand",
+        "modele": "Model & Engine",
+        "modele_ph": "e.g.: W212 E350 V6",
+        "probleme": "Symptom or error code",
+        "probleme_ph": "e.g.: injector noise or P0299",
+        "btn": "LAUNCH QUICK DIAGNOSIS",
+        "spinner": "Analyzing...",
+        "err_key": "❌ API Key missing in secrets.",
+        "err_gen": "Error: ",
+        "warn": "⚠️ Please fill in all fields.",
+        "res": "Result",
+        "history": "📜 Diagnosis History",
+        "rate_title": "⭐ RATE THE APP & LEAVE A REVIEW",
+        "pseudo_ph": "Your username (e.g.: Meca91)",
+        "comment_ph": "Your review on the app...",
+        "rate_btn": "Submit Review",
+        "rate_thanks": "🙏 Thank you for your feedback!",
+        "already_voted": "✅ You have already posted a review!",
+        "wait_msg": "⏳ Server cooling down. Please wait **{time} sec** before the next diagnosis.",
+        "ai_lang": "English"
+    },
     "Français": {
+        "title": "Rtv.ai Pro - Assistant Mécanique IA",
+        "sub": "Diagnostiquez vos pannes mécaniques en quelques secondes.",
         "marque": "Marque",
         "modele": "Modèle & Motorisation",
         "modele_ph": "ex: W212 E350 V6",
@@ -139,33 +54,186 @@ LANGS = {
         "warn": "⚠️ Remplis tous les champs.",
         "res": "Résultat",
         "history": "📜 Historique des diagnostics",
-        "copy_label": "📋 Texte brut pour copie rapide :",
         "rate_title": "⭐ NOTER L'APPLICATION ET LAISSER UN AVIS",
         "pseudo_ph": "Ton pseudo (ex: Meca91)",
         "comment_ph": "Ton avis sur l'application...",
         "rate_btn": "Envoyer mon avis",
         "rate_thanks": "🙏 Merci pour ton retour !",
         "already_voted": "✅ Tu as déjà posté un avis !",
+        "wait_msg": "⏳ Serveur en pause. Patiente **{time} sec** avant le prochain diag.",
+        "ai_lang": "French"
+    },
+    "Deutsch": {
+        "title": "Rtv.ai Pro - KI-Mechanik-Assistent",
+        "sub": "Diagnostizieren Sie Fahrzeugprobleme in Sekundenschnelle.",
+        "marque": "Marke",
+        "modele": "Modell & Motorisierung",
+        "modele_ph": "z.B.: W212 E350 V6",
+        "probleme": "Symptom oder Fehlercode",
+        "probleme_ph": "z.B.: Injektorgeräusch oder P0299",
+        "btn": "SCHNALLDIAGNOSE STARTEN",
+        "spinner": "Analyse läuft...",
+        "err_key": "❌ API-Schlüssel fehlt in den Secrets.",
+        "err_gen": "Fehler: ",
+        "warn": "⚠️ Bitte füllen Sie alle Felder aus.",
+        "res": "Ergebnis",
+        "history": "📜 Diagnoseverlauf",
+        "rate_title": "⭐ BEWERTEN SIE DIE APP & HINTERLASSEN SIE EINE BEWERTUNG",
+        "pseudo_ph": "Ihr Benutzername (z.B.: Meca91)",
+        "comment_ph": "Ihre Bewertung zur App...",
+        "rate_btn": "Bewertung absenden",
+        "rate_thanks": "🙏 Vielen Dank für Ihr Feedback!",
+        "already_voted": "✅ Sie haben bereits eine Bewertung abgegeben!",
+        "wait_msg": "⏳ Server macht Pause. Bitte warten Sie **{time} Sek.** vor der nächsten Diagnose.",
+        "ai_lang": "German"
+    },
+    "Македонски": {
+        "title": "Rtv.ai Pro - AI Механички асистент",
+        "sub": "Дијагностицирајте ги дефектите на возилото за неколку секунди.",
+        "marque": "Марка",
+        "modele": "Модел и мотор",
+        "modele_ph": "нпр: W212 E350 V6",
+        "probleme": "Симптом или код за грешка",
+        "probleme_ph": "нпр: звук на инјектор или P0299",
+        "btn": "ЗАПОЧНИ БРЗА ДИЈАГНОСТИКА",
+        "spinner": "Анализата е во тек...",
+        "err_key": "❌ Недостасува API клуч во тајните.",
+        "err_gen": "Грешка: ",
+        "warn": "⚠️ Ве молиме пополнете ги сите полиња.",
+        "res": "Резултат",
+        "history": "📜 Историја на дијагностика",
+        "rate_title": "⭐ ОЦЕНЕТЕ ЈА АПЛИКАЦИЈАТА И ОСТАВЕТЕ РЕЦЕНЗИЈА",
+        "pseudo_ph": "Вашето корисничко име (нпр: Meca91)",
+        "comment_ph": "Вашето мислење за апликацијата...",
+        "rate_btn": "Испрати рецензија",
+        "rate_thanks": "🙏 Ви благодариме за повратните информации!",
+        "already_voted": "✅ Веќе објавивте рецензија!",
+        "wait_msg": "⏳ Серверот е во пауза. Почекајте **{time} сек** пред следната дијагноза.",
+        "ai_lang": "Macedonian"
+    },
+    "Српски": {
+        "title": "Rtv.ai Pro - AI Механички асистент",
+        "sub": "Дијагностикујте кварове на возилу у неколико секунди.",
+        "marque": "Марка",
+        "modele": "Модел и мотор",
+        "modele_ph": "нпр: W212 E350 V6",
+        "probleme": "Симптом или код грешке",
+        "probleme_ph": "нпр: звук инјектора или P0299",
+        "btn": "ПОКРЕНИ БРЗУ ДИЈАГНОСТИКУ",
+        "spinner": "Анализа у току...",
+        "err_key": "❌ Недостаје API кључ у тајнама.",
+        "err_gen": "Грешка: ",
+        "warn": "⚠️ Молимо попуните сва поља.",
+        "res": "Резултат",
+        "history": "📜 Историја дијагностике",
+        "rate_title": "⭐ ОЦЕНИТЕ АПЛИКАЦИЈУ И ОСТАВИТЕ РЕЦЕНЗИЈУ",
+        "pseudo_ph": "Ваше корисничко име (нпр: Meca91)",
+        "comment_ph": "Ваше мишљење о апликацији...",
+        "rate_btn": "Пошаљи рецензију",
+        "rate_thanks": "🙏 Хвала вам на повратним информацијама!",
+        "already_voted": "✅ Већ сте објавили рецензију!",
+        "wait_msg": "⏳ Сервер је у паузи. Сачекајте **{time} сек** пре следеће дијагнозе.",
+        "ai_lang": "Serbian"
+    },
+    "Hrvatski": {
+        "title": "Rtv.ai Pro - AI Mehanički pomoćnik",
+        "sub": "Dijagnosticirajte kvarove na vozilu u nekoliko sekundi.",
+        "marque": "Marka",
+        "modele": "Model i motor",
+        "modele_ph": "npr: W212 E350 V6",
+        "probleme": "Simptom ili kod pogreške",
+        "probleme_ph": "npr: zvuk injektora ili P0299",
+        "btn": "POKRENI BRZU DIJAGNOSTIKU",
+        "spinner": "Analiza u tijeku...",
+        "err_key": "❌ Nedostaje API ključ u tajnama.",
+        "err_gen": "Pogreška: ",
+        "warn": "⚠️ Molimo ispunite sva polja.",
+        "res": "Rezultat",
+        "history": "📜 Povijest dijagnostike",
+        "rate_title": "⭐ OCIJENITE APLIKACIJU I OSTAVITE RECENZIJU",
+        "pseudo_ph": "Vaše korisničko ime (npr: Meca91)",
+        "comment_ph": "Vaša recenzija aplikacije...",
+        "rate_btn": "Pošalji recenziju",
+        "rate_thanks": "🙏 Hvala vam na povratnim informacijama!",
+        "already_voted": "✅ Već ste objavili recenziju!",
+        "wait_msg": "⏳ Poslužitelj je u pauzi. Pričekajte **{time} sek** prije sljedeće dijagnoze.",
+        "ai_lang": "Croatian"
+    },
+    "Русский": {
+        "title": "Rtv.ai Pro - ИИ Механический помощник",
+        "sub": "Быстрая диагностика автомобильных неисправностей.",
+        "marque": "Марка",
+        "modele": "Модель и двигатель",
+        "modele_ph": "напр: W212 E350 V6",
+        "probleme": "Симптом или код ошибки",
+        "probleme_ph": "напр: шум форсунки или P0299",
+        "btn": "ЗАПУСТИТЬ БЫСТРУЮ ДИАГНОСТИКУ",
+        "spinner": "Анализ...",
+        "err_key": "❌ Отсутствует API ключ в секретах.",
+        "err_gen": "Ошибка: ",
+        "warn": "⚠️ Пожалуйста, заполните все поля.",
+        "res": "Результат",
+        "history": "📜 История диагностик",
+        "rate_title": "⭐ ОЦЕНИТЕ ПРИЛОЖЕНИЕ И ОСТАВЬТЕ ОТЗЫВ",
+        "pseudo_ph": "Ваше имя (напр: Meca91)",
+        "comment_ph": "Ваш отзыв о приложении...",
+        "rate_btn": "Отправить отзыв",
+        "rate_thanks": "🙏 Спасибо за ваш отзыв!",
+        "already_voted": "✅ Вы уже оставили отзыв!",
+        "wait_msg": "⏳ Сервер отдыхает. Подождите **{time} сек** перед следующей диагностикой.",
+        "ai_lang": "Russian"
+    },
+    "Türkçe": {
+        "title": "Rtv.ai Pro - Yapay Zeka Mekanik Asistanı",
+        "sub": "Araç arızalarını saniyeler içinde teşhis edin.",
+        "marque": "Marka",
+        "modele": "Model ve Motor",
+        "modele_ph": "örn: W212 E350 V6",
+        "probleme": "Belirti veya hata kodu",
+        "probleme_ph": "örn: enjektör sesi veya P0299",
+        "btn": "HIZLI TEŞHİSİ BAŞLAT",
+        "spinner": "Analiz ediliyor...",
+        "err_key": "❌ Gizli anahtarlarda API Anahtarı eksik.",
+        "err_gen": "Hata: ",
+        "warn": "⚠️ Lütfen tüm alanları doldurun.",
+        "res": "Sonuç",
+        "history": "📜 Teşhis Geçmişi",
+        "rate_title": "⭐ UYGULAMAYI DEĞERLENDİRİN VE YORUM YAPIN",
+        "pseudo_ph": "Kullanıcı adınız (örn: Meca91)",
+        "comment_ph": "Uygulama hakkındaki yorumunuz...",
+        "rate_btn": "Yorumu Gönder",
+        "rate_thanks": "🙏 Geri bildiriminiz için teşekkürler!",
+        "already_voted": "✅ Zaten bir yorum gönderdiniz!",
+        "wait_msg": "⏳ Sunucu beklemede. Lütfen sonraki teşhisten önce **{time} sn** bekleyin.",
+        "ai_lang": "Turkish"
     }
 }
 
+# --- MENU DÉROULANT SÉLECTION DE LANGUE ---
+selected_lang = st.selectbox(
+    "🌐 Language / Langue",
+    ["English", "Français", "Deutsch", "Македонски", "Српски", "Hrvatski", "Русский", "Türkçe"],
+    key="global_lang_selector"
+)
+
+# Chargement du dictionnaire actif
+t = LANGS[selected_lang]
+
 # --- FONCTIONS AVIS ---
 def charger_avis():
-  if os.path.exists(REVIEWS_FILE):
-    try:
-      with open(REVIEWS_FILE, "r", encoding="utf-8") as f:
-        return json.load(f)
-    except:
-      return []
-  return []
-
+    if os.path.exists(REVIEWS_FILE):
+        try:
+            with open(REVIEWS_FILE, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except:
+            return []
+    return []
 
 def sauvegarder_avis(liste_avis):
-  with open(REVIEWS_FILE, "w", encoding="utf-8") as f:
-    json.dump(liste_avis, f, ensure_ascii=False, indent=4)
+    with open(REVIEWS_FILE, "w", encoding="utf-8") as f:
+        json.dump(liste_avis, f, ensure_ascii=False, indent=4)
 
-
-# --- CSS FORCE BRUTE ---
+# --- CSS STYLISÉ ---
 st.markdown(
     """
     <style>
@@ -193,36 +261,35 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-st.markdown(
-    "# 🔧 Rtv.ai <span class='titre-pro'>Pro</span>", unsafe_allow_html=True
-)
+# --- EN-TÊTE PRINCIPAL ---
+st.markdown(f"# 🔧 {t['title']}")
+st.caption(t["sub"])
 
 # API Key
 api_key = st.secrets.get("GEMINI_API_KEY") or os.environ.get("GEMINI_API_KEY")
 if api_key:
-  genai.configure(api_key=api_key)
+    genai.configure(api_key=api_key)
 
 # Session States
 if "historique" not in st.session_state:
-  st.session_state["historique"] = []
+    st.session_state["historique"] = []
 if "dernier_clic" not in st.session_state:
-  st.session_state["dernier_clic"] = 0
+    st.session_state["dernier_clic"] = 0
 if "a_deja_vote" not in st.session_state:
-  st.session_state["a_deja_vote"] = False
-
-t = LANGS["Français"]
+    st.session_state["a_deja_vote"] = False
 
 # Formulaire principal
 col1, col2 = st.columns(2)
 with col1:
-  marque_choisie = st.selectbox(
-      t["marque"],
-      ["Mercedes-Benz", "BMW", "Audi", "Volkswagen", "Renault", "Peugeot"],
-  )
+    marque_choisie = st.selectbox(
+        t["marque"],
+        ["Mercedes-Benz", "BMW", "Audi", "Volkswagen", "Renault", "Peugeot"],
+        key="select_brand"
+    )
 with col2:
-  modele = st.text_input(t["modele"], placeholder=t["modele_ph"])
+    modele = st.text_input(t["modele"], placeholder=t["modele_ph"], key="input_modele")
 
-probleme = st.text_input(t["probleme"], placeholder=t["probleme_ph"])
+probleme = st.text_input(t["probleme"], placeholder=t["probleme_ph"], key="input_probleme")
 
 # --- GESTION DU MINUTEUR DE 60S ---
 utilisateur_actuel = st.session_state.get("utilisateur", "")
@@ -233,60 +300,59 @@ temps_restant = int(DUREE_ATTENTE - temps_ecoule)
 
 lancer_diag = False
 if not est_admin and temps_restant > 0:
-  st.warning(
-      f"⏳ Serveur en pause. Patiente **{temps_restant} sec** avant le prochain"
-      " diag."
-  )
-  st.button(t["btn"], disabled=True)
+    st.warning(t["wait_msg"].format(time=temps_restant))
+    st.button(t["btn"], disabled=True, key="btn_disabled")
 else:
-  if st.button(t["btn"]):
-    st.session_state["dernier_clic"] = time.time()
-    lancer_diag = True
+    if st.button(t["btn"], key="btn_lancer_diag"):
+        st.session_state["dernier_clic"] = time.time()
+        lancer_diag = True
 
 # --- EXÉCUTION DIAGNOSTIC ---
 if lancer_diag:
-  if not api_key:
-    st.error(t["err_key"])
-  elif modele and probleme:
-    try:
-      with st.spinner(t["spinner"]):
-        # CORRECTION DU NOM DU MODÈLE (gemini-1.5-flash)
-        model = genai.GenerativeModel("gemini-1.5-flash")
-        prompt = f"""
-        Expert mécanicien. Véhicule: {marque_choisie} {modele}. Symptôme: "{probleme}".
-        Réponds court en Français style mécano:
-        1. Coupable N°1 (pièce précise)
-        2. Test rapide (1 min)
-        3. Serrage / Réf
-        """
-        response = model.generate_content(prompt)
-        st.session_state["historique"].insert(
-            0,
-            {
-                "vehicule": f"{marque_choisie} {modele}",
-                "symptome": probleme,
-                "resultat": response.text,
-            },
-        )
-    except ResourceExhausted:
-      st.error("⏳ Quota dépassé ! Patiente 1 minute.")
-    except Exception as e:
-      st.error(f"{t['err_gen']}{e}")
-  else:
-    st.warning(t["warn"])
+    if not api_key:
+        st.error(t["err_key"])
+    elif modele and probleme:
+        try:
+            with st.spinner(t["spinner"]):
+                model = genai.GenerativeModel("gemini-1.5-flash")
+                prompt = f"""
+                You are an expert mechanic assistant.
+                Vehicle: {marque_choisie} {modele}.
+                Symptom/Issue: "{probleme}".
+                
+                Respond concisely and professionally in {t['ai_lang']}:
+                1. Top Suspect / Faulty Part (precise)
+                2. Quick 1-minute test
+                3. Torque Specs / Part Reference (if applicable)
+                """
+                response = model.generate_content(prompt)
+                st.session_state["historique"].insert(
+                    0,
+                    {
+                        "vehicule": f"{marque_choisie} {modele}",
+                        "symptome": probleme,
+                        "resultat": response.text,
+                    },
+                )
+        except ResourceExhausted:
+            st.error("⏳ Quota dépassé ! Patiente 1 minute.")
+        except Exception as e:
+            st.error(f"{t['err_gen']}{e}")
+    else:
+        st.warning(t["warn"])
 
 # Affichage des résultats & historique
 if st.session_state["historique"]:
-  dernier = st.session_state["historique"][0]
-  st.markdown("---")
-  st.markdown(f"### 📊 {t['res']} : {dernier['vehicule']}")
-  st.markdown(dernier["resultat"])
+    dernier = st.session_state["historique"][0]
+    st.markdown("---")
+    st.markdown(f"### 📊 {t['res']} : {dernier['vehicule']}")
+    st.markdown(dernier["resultat"])
 
 if len(st.session_state["historique"]) > 1:
-  with st.expander(t["history"]):
-    for idx, item in enumerate(st.session_state["historique"][1:]):
-      st.markdown(f"**{item['vehicule']}** — *{item['symptome']}*")
-      st.caption(item["resultat"][:100] + "...")
+    with st.expander(t["history"]):
+        for idx, item in enumerate(st.session_state["historique"][1:]):
+            st.markdown(f"**{item['vehicule']}** — *{item['symptome']}*")
+            st.caption(item["resultat"][:100] + "...")
 
 # ==========================================
 # --- SECTION AVIS (TOUT EN BAS DU CODE) ---
@@ -295,42 +361,42 @@ st.markdown("<br><hr>", unsafe_allow_html=True)
 st.markdown(f"### {t['rate_title']}")
 
 if st.session_state["a_deja_vote"]:
-  st.success(t["already_voted"])
+    st.success(t["already_voted"])
 else:
-  col_r1, col_r2 = st.columns([1, 2])
-  with col_r1:
-    note_sel = st.select_slider(
-        "Note",
-        options=["⭐", "⭐⭐", "⭐⭐⭐", "⭐⭐⭐⭐", "⭐⭐⭐⭐⭐"],
-        value="⭐⭐⭐⭐⭐",
-    )
-  with col_r2:
-    pseudo_in = st.text_input("Pseudo", placeholder=t["pseudo_ph"])
+    col_r1, col_r2 = st.columns([1, 2])
+    with col_r1:
+        note_sel = st.select_slider(
+            "Note",
+            options=["⭐", "⭐⭐", "⭐⭐⭐", "⭐⭐⭐⭐", "⭐⭐⭐⭐⭐"],
+            value="⭐⭐⭐⭐⭐",
+            key="slider_note"
+        )
+    with col_r2:
+        pseudo_in = st.text_input("Pseudo", placeholder=t["pseudo_ph"], key="input_pseudo_avis")
 
-  com_in = st.text_area("Avis", placeholder=t["comment_ph"])
+    com_in = st.text_area("Avis", placeholder=t["comment_ph"], key="input_comment_avis")
 
-  if st.button(t["rate_btn"]):
-    if pseudo_in.strip() and com_in.strip():
-      avis_liste = charger_avis()
-      avis_liste.insert(
-          0,
-          {
-              "pseudo": pseudo_in.strip(),
-              "note": note_sel,
-              "commentaire": com_in.strip(),
-          },
-      )
-      sauvegarder_avis(avis_liste)
-      st.session_state["a_deja_vote"] = True
-      st.success(t["rate_thanks"])
-      st.rerun()
-    else:
-      st.warning("⚠️ Entre ton pseudo et ton avis avant d'envoyer.")
+    if st.button(t["rate_btn"], key="btn_submit_avis"):
+        if pseudo_in.strip() and com_in.strip():
+            avis_liste = charger_avis()
+            avis_liste.insert(
+                0,
+                {
+                    "pseudo": pseudo_in.strip(),
+                    "note": note_sel,
+                    "commentaire": com_in.strip(),
+                },
+            )
+            sauvegarder_avis(avis_liste)
+            st.session_state["a_deja_vote"] = True
+            st.success(t["rate_thanks"])
+            st.rerun()
+        else:
+            st.warning("⚠️ Entre ton pseudo et ton avis avant d'envoyer.")
 
 # Affichage des avis clients enregistrés
 tous_avis = charger_avis()
 if tous_avis:
-  st.markdown("---")
-  for av in tous_avis:
-    st.markdown(f"**{av['pseudo']}** — {av['note']}")
-    st.caption(f'"{av["commentaire"]}"')
+    st.markdown("---")
+    for a in tous_avis:
+        st.markdown(f"**{a['pseudo']}** ({a['note']}) : {a['commentaire']}")
