@@ -250,7 +250,7 @@ def sauvegarder_avis(liste_avis):
         json.dump(liste_avis, f, ensure_ascii=False, indent=4)
 
 
-# --- CSS STYLISÉ (AVEC CORRECTIF POUR LES MENUS DÉROULANTS BLANCS) ---
+# --- CSS STYLISÉ (AVEC CORRECTION COMPLÈTE DES LISTES DÉROULANTES) ---
 st.markdown(
     """
     <style>
@@ -283,15 +283,22 @@ st.markdown(
         border-radius: 10px !important;
     }
 
-    /* CORRECTIF POUR LES MENUS DÉROULANTS (POPOVER) EN MODE SOMBRE */
-    [data-baseweb="popover"], [data-baseweb="menu"], ul[role="listbox"] {
+    /* CORRECTION RADICALE DU PANNEAU DÉROULANT (SELECTBOX) */
+    div[data-baseweb="popover"], div[data-baseweb="menu"], ul[role="listbox"], div[role="listbox"] {
         background-color: #12151f !important;
         color: #ffffff !important;
     }
+    
+    /* Correction du texte à l'intérieur du menu déroulant ouvert */
+    div[data-baseweb="popover"] div, ul[role="listbox"] div, li[role="option"] div {
+        color: #ffffff !important;
+    }
+    
     li[role="option"] {
         background-color: #12151f !important;
         color: #ffffff !important;
     }
+    
     li[role="option"]:hover {
         background-color: #ff0000 !important;
         color: #ffffff !important;
