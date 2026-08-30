@@ -4,7 +4,7 @@ import requests
 
 # --- CONFIGURATION AUTHENTIFICATION ---
 # Tu peux récupérer tes identifiants sur la console Firebase (Firebase Auth / Web API Key)
-FIREBASE_WEB_API_KEY = st.secrets.get("FIREBASE_WEB_API_KEY", "")
+FIREBASE_WEB_API_KEY = st.secrets.get("AIzaSyCSzQw2K1Vx7LWgzu63PXjLaG5toNov1fo", "")
 
 
 def inscription_email(email, password):
