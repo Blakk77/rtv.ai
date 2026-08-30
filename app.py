@@ -314,7 +314,7 @@ if lancer_diag:
     elif modele and probleme:
         try:
             with st.spinner(t["spinner"]):
-                model = genai.GenerativeModel("gemini-1.5-flash")
+                model = genai.GenerativeModel("gemini-3.6-flash")
                 prompt = f"""
                 You are an expert mechanic assistant.
                 Vehicle: {marque_choisie} {modele}.
