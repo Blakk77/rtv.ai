@@ -14,9 +14,7 @@ st.set_page_config(page_title="Rtv.ai Pro", page_icon="🔧", layout="centered")
 DUREE_ATTENTE = 60  # 60 secondes de cooldown
 PSEUDO_ADMIN = "Meca91"  # Ton pseudo pour ne JAMAIS attendre
 REVIEWS_FILE = "avis.json"
-PAYPAL_URL = (  # Remplace par ton vrai lien PayPal.Me
-    "https://paypal.me/Meca91"
-)
+PAYPAL_URL = "https://paypal.me/RtvAimecha"  # Lien PayPal mis à jour avec ton @
 
 # --- DICTIONNAIRE MULTILINGUE COMPLET ---
 LANGS = {
