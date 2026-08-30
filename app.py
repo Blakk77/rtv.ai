@@ -5,6 +5,8 @@ import google.generativeai as genai
 import streamlit as st
 from google.api_core.exceptions import ResourceExhausted
 
+from features import afficher_interface_auth
+
 # 1. Configuration de la page (RÈGLE STREAMLIT : toujours en premier)
 st.set_page_config(page_title="Rtv.ai Pro", page_icon="🔧", layout="centered")
 
@@ -208,6 +210,9 @@ LANGS = {
         "ai_lang": "Turkish"
     }
 }
+
+# Gestion de l'authentification dans la barre latérale ou en haut
+est_connecte = afficher_interface_auth(t)
 
 # --- MENU DÉROULANT SÉLECTION DE LANGUE ---
 selected_lang = st.selectbox(
