@@ -10,7 +10,6 @@ FIREBASE_WEB_API_KEY = (
 )
 
 
-@st.cache_resource
 def get_cookie_manager():
     return stx.CookieManager()
 
