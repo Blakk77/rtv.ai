@@ -5,6 +5,54 @@ import google.generativeai as genai
 import streamlit as st
 from google.api_core.exceptions import ResourceExhausted
 
+import streamlit as st
+
+# Dictionnaire des traductions pour chaque langue
+translations = {
+    "English": {
+        "title": "Rtv.ai Pro - Mechanic Assistant",
+        "select_lang": "Select language",
+    },
+    "Français": {
+        "title": "Rtv.ai Pro - Assistant Mécanique",
+        "select_lang": "Choisir la langue",
+    },
+    "Deutsch": {
+        "title": "Rtv.ai Pro - Mechanik-Assistent",
+        "select_lang": "Sprache auswählen",
+    },
+    "Македонски": {
+        "title": "Rtv.ai Pro - Механички асистент",
+        "select_lang": "Изберете јазик",
+    },
+    "Српски": {
+        "title": "Rtv.ai Pro - Механички асистент",
+        "select_lang": "Изаберите језик",
+    },
+    "Hrvatski": {
+        "title": "Rtv.ai Pro - Mehanički pomoćnik",
+        "select_lang": "Odaberi jezik",
+    },
+    "Русский": {
+        "title": "Rtv.ai Pro - Механический помощник",
+        "select_lang": "Выберите язык",
+    },
+    "Türkçe": {
+        "title": "Rtv.ai Pro - Mekanik Asistanı",
+        "select_lang": "Dil seçin",
+    }
+}
+
+# Sélecteur de langue dans la barre latérale (Anglais en premier par défaut)
+lang_options = ["English", "Français", "Deutsch", "Македонски", "Српски", "Hrvatski", "Русский", "Türkçe"]
+selected_lang = st.sidebar.selectbox("Language / Langue", lang_options)
+
+# Récupération des textes selon la langue choisie
+t = translations[selected_lang]
+
+# Exemple d'utilisation dans l'application
+st.title(t["title"])
+
 st.set_page_config(page_title="Rtv.ai Pro", page_icon="🔧", layout="centered")
 
 
